@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Above &amp; Beyond AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .dash-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      padding-top: var(--nav-height);
+    }
+    /* Sidebar */
+    .dash-sidebar {
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.25rem;
+      position: sticky;
+      top: var(--nav-height);
+      height: calc(100vh - var(--nav-height));
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted); padding: 0 0.75rem;
+      margin-bottom: 0.5rem; margin-top: 1.5rem;
+    }
+    .sidebar-label:first-child { margin-top: 0; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 0.875rem; font-weight: 500;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      background: none; border: none;
+      width: 100%; text-align: left;
+      font-family: var(--font-main);
+    }
+    .sidebar-link:hover { background: rgba(108,99,255,0.08); color: var(--text-primary); }
+    .sidebar-link.active { background: rgba(108,99,255,0.12); color: var(--accent-light); }
+    .sidebar-link .icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    /* Main content */
+    .dash-main { padding: 2.5rem; overflow-y: auto; }
+
+    /* Overview cards */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+    .stat-card:hover { border-color: rgba(108,99,255,0.3); transform: translateY(-2px); }
+    .stat-card .label {
+      font-size: 0.75rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card .value {
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1;
+    }
+    .stat-card .sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+    /* Assessment history */
+    .assessment-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 0.75rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .assessment-row:hover { border-color: rgba(108,99,255,0.3); background: var(--bg-card-hover); }
+    .score-badge {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background:
+        linear-gradient(var(--bg-card-hover), var(--bg-card-hover)) padding-box,
+        linear-gradient(135deg, var(--accent), var(--teal)) border-box;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800;
+      color: var(--accent-light);
+      flex-shrink: 0;
+    }
+    .assessment-info { flex: 1; }
+    .assessment-info .title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+    .assessment-info .meta  { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .dim-pills { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .dim-pill {
+      font-size: 0.68rem; padding: 0.15rem 0.5rem;
+      border-radius: 50px;
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.15);
+      color: var(--accent-light);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 4rem 2rem;
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state h3 { margin-bottom: 0.5rem; }
+
+    /* Detail view */
+    .detail-view { display: none; }
+    .detail-view.active { display: block; }
+
+    /* Profile section */
+    .profile-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700;
+      color: white; margin-bottom: 1rem;
+    }
+
+    /* Loading */
+    .loading-overlay {
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem; gap: 0.75rem;
+      color: var(--text-muted); font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .dash-layout { grid-template-columns: 1fr; }
+      .dash-sidebar { display: none; }
+      .dash-main { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">✦</div><span>Above &amp; Beyond AI</span></a>
+    <ul class="nav-links">
+      <li><a href="leistungen.html" data-i18n="nav_services">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html" data-i18n="nav_readiness">KI Readiness</a></li>
+      <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+      <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="btn btn-sm btn-secondary" onclick="SupabaseAuth.signOut()">Logout</button>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Dashboard Layout -->
+<div class="dash-layout">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <div class="sidebar-label">Übersicht</div>
+    <button class="sidebar-link active" id="navOverview" onclick="showSection('overview')">
+      <span class="icon">📊</span> Dashboard
+    </button>
+    <button class="sidebar-link" id="navHistory" onclick="showSection('history')">
+      <span class="icon">📋</span> Assessments
+    </button>
+    <button class="sidebar-link" id="navProfile" onclick="showSection('profile')">
+      <span class="icon">👤</span> Profil
+    </button>
+
+    <div class="sidebar-label">Schnellzugriff</div>
+    <a class="sidebar-link" href="ki-readiness-check.html">
+      <span class="icon">🎯</span> Neues Assessment
+    </a>
+    <a class="sidebar-link" href="kontakt.html">
+      <span class="icon">📞</span> Beratung buchen
+    </a>
+    <a class="sidebar-link" href="leistungen.html">
+      <span class="icon">💼</span> Leistungen
+    </a>
+
+    <div style="margin-top:auto;padding-top:2rem">
+      <div id="sidebarUser" style="padding:0.75rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border);font-size:0.8rem">
+        <div style="color:var(--text-muted);margin-bottom:0.25rem">Eingeloggt als</div>
+        <div id="sidebarEmail" style="color:var(--accent-light);font-weight:600;word-break:break-all">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dash-main">
+
+    <!-- ── Overview Section ── -->
+    <div id="sectionOverview">
+      <div style="margin-bottom:2rem">
+        <h1 style="font-size:1.6rem;margin-bottom:0.25rem">Willkommen zurück 👋</h1>
+        <p style="margin:0">Hier ist eine Übersicht Ihrer KI Readiness Entwicklung.</p>
+      </div>
+
+      <div class="overview-grid" id="overviewStats">
+        <div class="stat-card">
+          <div class="label">Assessments</div>
+          <div class="value" id="statCount">—</div>
+          <div class="sub">Durchgeführt</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Letzter Score</div>
+          <div class="value" id="statLast">—</div>
+          <div class="sub">von 100 Punkten</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Bester Score</div>
+          <div class="value" id="statBest">—</div>
+          <div class="sub">Höchstwert</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Trend</div>
+          <div class="value" id="statTrend">—</div>
+          <div class="sub">vs. letztes Assessment</div>
+        </div>
+      </div>
+
+      <!-- Latest assessment radar -->
+      <div id="latestChartWrap" class="card" style="margin-bottom:2rem;display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <h3 style="font-size:1rem">Letztes Assessment — Radar-Analyse</h3>
+          <span id="latestDate" style="font-size:0.78rem;color:var(--text-muted)"></span>
+        </div>
+        <div style="max-width:400px;margin:0 auto">
+          <canvas id="overviewRadar" width="400" height="300"></canvas>
+        </div>
+      </div>
+
+      <!-- Progress over time -->
+      <div id="progressChartWrap" class="card" style="display:none">
+        <h3 style="font-size:1rem;margin-bottom:1.5rem">Score-Entwicklung</h3>
+        <canvas id="progressChart" height="120"></canvas>
+      </div>
+
+      <div id="overviewEmpty" class="empty-state" style="display:none">
+        <div class="icon">🎯</div>
+        <h3>Noch kein Assessment</h3>
+        <p>Starten Sie jetzt Ihren ersten KI Readiness Check und sehen Sie hier Ihre Ergebnisse.</p>
+        <a href="ki-readiness-check.html" class="btn btn-primary" style="margin-top:0.5rem">
+          Jetzt starten →
+        </a>
+      </div>
+    </div>
+
+    <!-- ── History Section ── -->
+    <div id="sectionHistory" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem">
+        <div>
+          <h2 style="font-size:1.4rem;margin-bottom:0.25rem">Assessment-Verlauf</h2>
+          <p style="margin:0;font-size:0.875rem">Alle Ihre gespeicherten Auswertungen.</p>
+        </div>
+        <a href="ki-readiness-check.html" class="btn btn-primary btn-sm">
+          + Neues Assessment
+        </a>
+      </div>
+      <div id="historyList">
+        <div class="loading-overlay"><span class="spinner"></span> Lädt...</div>
+      </div>
+    </div>
+
+    <!-- ── Detail View ── -->
+    <div id="sectionDetail" style="display:none">
+      <div style="margin-bottom:1.5rem">
+        <button onclick="showSection('history')" class="btn btn-secondary btn-sm">← Zurück</button>
+      </div>
+      <div id="detailContent"></div>
+    </div>
+
+    <!-- ── Profile Section ── -->
+    <div id="sectionProfile" style="display:none">
+      <h2 style="font-size:1.4rem;margin-bottom:2rem">Mein Profil</h2>
+      <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:2rem;align-items:start">
+        <div class="card" style="text-align:center">
+          <div class="profile-avatar" id="profileAvatar" style="margin:0 auto">?</div>
+          <div id="profileName" style="font-weight:700;font-size:1.1rem">—</div>
+          <div id="profileCompany" style="font-size:0.875rem;color:var(--text-muted);margin-top:0.25rem">—</div>
+          <div id="profileEmail" style="font-size:0.8rem;color:var(--accent-light);margin-top:0.5rem">—</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:1.5rem">Profil bearbeiten</h3>
+          <form onsubmit="handleProfileUpdate(event)">
+            <div class="form-group">
+              <label class="form-label">Vollständiger Name</label>
+              <input type="text" class="form-input" id="editName" placeholder="Max Mustermann" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unternehmen</label>
+              <input type="text" class="form-input" id="editCompany" placeholder="Firma GmbH" />
+            </div>
+            <button type="submit" class="btn btn-primary">Speichern</button>
+          </form>
+          <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+            <h4 style="font-size:0.9rem;margin-bottom:1rem;color:var(--text-muted)">Konto</h4>
+            <button onclick="SupabaseAuth.signOut()" class="btn btn-secondary btn-sm">
+              Ausloggen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+const DIMENSIONS = [
+  { id: 'strategy',   icon: '📋', label_de: 'Strategie & Vision' },
+  { id: 'data',       icon: '🗄️', label_de: 'Daten & Qualität' },
+  { id: 'process',    icon: '⚙️', label_de: 'Prozesse & Automatisierung' },
+  { id: 'tech',       icon: '💻', label_de: 'Technologie & Infrastruktur' },
+  { id: 'culture',    icon: '👥', label_de: 'Kultur & Kompetenz' },
+  { id: 'compliance', icon: '⚖️', label_de: 'Compliance & Governance' }
+];
+
+let allAssessments = [];
+let currentUser = null;
+let overviewRadarChart = null;
+let progressLineChart  = null;
+
+/* ── Section navigation ───────────────────────────────── */
+function showSection(name) {
+  ['overview', 'history', 'detail', 'profile'].forEach(s => {
+    document.getElementById('section' + s.charAt(0).toUpperCase() + s.slice(1)).style.display =
+      s === name ? 'block' : 'none';
+  });
+  ['navOverview', 'navHistory', 'navProfile'].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
+  });
+  const map = { overview: 'navOverview', history: 'navHistory', profile: 'navProfile' };
+  if (map[name]) document.getElementById(map[name])?.classList.add('active');
+  if (name === 'history') renderHistory();
+}
+
+/* ── Auth guard ───────────────────────────────────────── */
+async function authGuard() {
+  const session = await SupabaseAuth.getSession();
+  if (!session) {
+    window.location.href = 'login.html?returnTo=dashboard.html';
+    return null;
+  }
+  return session.user;
+}
+
+/* ── Load dashboard data ──────────────────────────────── */
+async function loadDashboard() {
+  currentUser = await authGuard();
+  if (!currentUser) return;
+
+  // Set sidebar user info
+  document.getElementById('sidebarEmail').textContent = currentUser.email;
+  loadProfile();
+
+  // Load assessments
+  try {
+    allAssessments = await ReadinessDB.getMyAssessments();
+  } catch(e) {
+    allAssessments = [];
+  }
+
+  renderOverview();
+}
+
+/* ── Render overview ──────────────────────────────────── */
+function renderOverview() {
+  if (!allAssessments.length) {
+    document.getElementById('overviewEmpty').style.display = 'block';
+    document.getElementById('latestChartWrap').style.display = 'none';
+    document.getElementById('progressChartWrap').style.display = 'none';
+    document.getElementById('statCount').textContent = '0';
+    document.getElementById('statLast').textContent = '—';
+    document.getElementById('statBest').textContent = '—';
+    document.getElementById('statTrend').textContent = '—';
+    return;
+  }
+
+  document.getElementById('overviewEmpty').style.display = 'none';
+
+  const sorted   = [...allAssessments].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  const latest   = sorted[0];
+  const best     = Math.max(...allAssessments.map(a => a.overall_score || 0));
+  const prev     = sorted[1];
+  const trend    = prev ? (latest.overall_score - prev.overall_score) : null;
+
+  document.getElementById('statCount').textContent = allAssessments.length;
+  document.getElementById('statLast').textContent  = latest.overall_score ?? '—';
+  document.getElementById('statBest').textContent  = best;
+  document.getElementById('statTrend').textContent =
+    trend === null ? '—' :
+    trend > 0 ? '+' + trend : trend.toString();
+
+  // Radar
+  document.getElementById('latestChartWrap').style.display = 'block';
+  document.getElementById('latestDate').textContent =
+    new Date(latest.created_at).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
+  renderRadar('overviewRadar', latest.scores, overviewRadarChart, c => overviewRadarChart = c);
+
+  // Progress line
+  if (allAssessments.length > 1) {
+    document.getElementById('progressChartWrap').style.display = 'block';
+    renderProgress(sorted.reverse());
+  }
+}
+
+/* ── Render history list ──────────────────────────────── */
+function renderHistory() {
+  const container = document.getElementById('historyList');
+  if (!allAssessments.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <h3>Noch keine Assessments</h3>
+        <p>Ihr erster KI Readiness Check wartet auf Sie.</p>
+        <a href="ki-readiness-check.html" class="btn btn-primary" style="margin-top:0.75rem">
+          Jetzt starten →
+        </a>
+      </div>`;
+    return;
+  }
+
+  const sorted = [...allAssessments].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  container.innerHTML = sorted.map((a, i) => {
+    const date = new Date(a.created_at).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const time = new Date(a.created_at).toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+    const scores = a.scores || {};
+    const pills = DIMENSIONS.map(d =>
+      `<span class="dim-pill">${d.icon} ${Math.round(scores[d.id] || 0)}%</span>`
+    ).join('');
+
+    return `
+      <div class="assessment-row" onclick="showDetail('${a.id}')">
+        <div class="score-badge">${a.overall_score ?? '—'}</div>
+        <div class="assessment-info">
+          <div class="title">Assessment #${sorted.length - i} — Score: ${a.overall_score ?? '—'}/100</div>
+          <div class="meta">${date} um ${time} · ${a.lang === 'en' ? 'English' : 'Deutsch'}</div>
+          <div class="dim-pills">${pills}</div>
+        </div>
+        <span style="color:var(--text-muted);font-size:1.2rem">›</span>
+      </div>`;
+  }).join('');
+}
+
+/* ── Show assessment detail ───────────────────────────── */
+async function showDetail(id) {
+  showSection('detail');
+  const container = document.getElementById('detailContent');
+  container.innerHTML = '<div class="loading-overlay"><span class="spinner"></span> Lädt...</div>';
+
+  let a;
+  try {
+    a = await ReadinessDB.getById(id);
+  } catch(e) {
+    a = allAssessments.find(x => x.id === id);
+  }
+
+  if (!a) { container.innerHTML = '<p>Nicht gefunden.</p>'; return; }
+
+  const date  = new Date(a.created_at).toLocaleDateString('de-DE', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  const scores = a.scores || {};
+
+  container.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:2rem">
+      <div>
+        <h2 style="font-size:1.4rem;margin-bottom:0.25rem">Assessment-Detail</h2>
+        <p style="margin:0;font-size:0.875rem;color:var(--text-muted)">${date}</p>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:2.5rem;font-weight:800" class="gradient-text">${a.overall_score}<span style="font-size:1.2rem">/100</span></div>
+        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Gesamt-Score</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+      <div class="card">
+        <h3 style="font-size:0.9rem;margin-bottom:1.25rem">Radar-Analyse</h3>
+        <canvas id="detailRadar" width="300" height="240"></canvas>
+      </div>
+      <div class="card">
+        <h3 style="font-size:0.9rem;margin-bottom:1.25rem">Detailergebnisse</h3>
+        ${DIMENSIONS.map(d => {
+          const sc = Math.round(scores[d.id] || 0);
+          return `
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.875rem">
+              <span style="font-size:1rem;width:20px;text-align:center">${d.icon}</span>
+              <div style="flex:1">
+                <div style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:0.3rem">${d.label_de}</div>
+                <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">
+                  <div style="height:100%;width:${sc}%;background:linear-gradient(90deg,var(--accent),var(--teal));border-radius:3px;transition:width 1s ease"></div>
+                </div>
+              </div>
+              <span style="font-size:0.85rem;font-weight:700;color:var(--accent-light);min-width:35px;text-align:right">${sc}%</span>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <button class="btn btn-secondary btn-sm" onclick="window.print()">📄 PDF exportieren</button>
+      <a href="ki-readiness-check.html" class="btn btn-primary btn-sm">🔄 Neues Assessment</a>
+      <a href="kontakt.html" class="btn btn-teal btn-sm">📞 Beratung buchen</a>
+    </div>
+  `;
+
+  setTimeout(() => {
+    renderRadar('detailRadar', scores, null, () => {});
+  }, 100);
+}
+
+/* ── Render radar chart ───────────────────────────────── */
+function renderRadar(canvasId, scores, existingChart, setChart) {
+  if (existingChart) existingChart.destroy();
+  const ctx = document.getElementById(canvasId)?.getContext('2d');
+  if (!ctx) return;
+  const chart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: DIMENSIONS.map(d => d.label_de),
+      datasets: [{
+        label: 'Score',
+        data: DIMENSIONS.map(d => scores?.[d.id] || 0),
+        backgroundColor: 'rgba(108,99,255,0.15)',
+        borderColor: '#6C63FF',
+        pointBackgroundColor: '#6C63FF',
+        pointBorderColor: '#fff',
+        borderWidth: 2, pointRadius: 4
+      }]
+    },
+    options: {
+      scales: { r: {
+        min: 0, max: 100,
+        ticks: { stepSize: 25, color: '#606080', backdropColor: 'transparent', font: { size: 10 } },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        angleLines: { color: 'rgba(255,255,255,0.06)' },
+        pointLabels: { color: '#A0A0C0', font: { size: 10 } }
+      }},
+      plugins: { legend: { display: false } }
+    }
+  });
+  setChart(chart);
+}
+
+/* ── Render progress line chart ───────────────────────── */
+function renderProgress(sorted) {
+  if (progressLineChart) progressLineChart.destroy();
+  const ctx = document.getElementById('progressChart')?.getContext('2d');
+  if (!ctx) return;
+  const labels = sorted.map((a, i) =>
+    new Date(a.created_at).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })
+  );
+  const scores = sorted.map(a => a.overall_score || 0);
+  progressLineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Gesamt-Score',
+        data: scores,
+        borderColor: '#6C63FF',
+        backgroundColor: 'rgba(108,99,255,0.08)',
+        pointBackgroundColor: '#6C63FF',
+        tension: 0.4, fill: true, borderWidth: 2, pointRadius: 5
+      }]
+    },
+    options: {
+      scales: {
+        y: { min: 0, max: 100,
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#606080', font: { size: 11 } }
+        },
+        x: { grid: { display: false }, ticks: { color: '#606080', font: { size: 11 } } }
+      },
+      plugins: { legend: { labels: { color: '#A0A0C0' } } }
+    }
+  });
+}
+
+/* ── Profile ──────────────────────────────────────────── */
+async function loadProfile() {
+  try {
+    const profile = await ProfileDB.get(currentUser.id);
+    if (profile) {
+      document.getElementById('profileName').textContent    = profile.full_name || '—';
+      document.getElementById('profileCompany').textContent = profile.company   || '—';
+      document.getElementById('profileEmail').textContent   = profile.email     || currentUser.email;
+      document.getElementById('editName').value             = profile.full_name  || '';
+      document.getElementById('editCompany').value          = profile.company    || '';
+      const initial = (profile.full_name || currentUser.email)[0].toUpperCase();
+      document.getElementById('profileAvatar').textContent  = initial;
+      document.getElementById('sidebarEmail').textContent   = profile.email || currentUser.email;
+    }
+  } catch(e) {
+    document.getElementById('profileEmail').textContent = currentUser.email;
+  }
+}
+
+async function handleProfileUpdate(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    await ProfileDB.update(currentUser.id, {
+      full_name: document.getElementById('editName').value,
+      company:   document.getElementById('editCompany').value
+    });
+    showToast('Profil gespeichert!', 'success');
+    await loadProfile();
+  } catch(err) {
+    showToast('Fehler beim Speichern.', 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Speichern';
+}
+
+/* ── Init ─────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+</body>
+</html>
