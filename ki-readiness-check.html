@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KI Readiness Check — Messen Sie die KI-Reife Ihres Unternehmens in 6 Dimensionen." />
+  <title>KI Readiness Check — Above &amp; Beyond AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* ── Readiness-Check specific styles ── */
+    .check-layout {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .check-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .check-progress-wrap {
+      margin-bottom: 2.5rem;
+    }
+    .check-progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 0.75rem;
+    }
+    .check-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+    .check-step-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .dimension-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(108,99,255,0.1);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      margin-bottom: 1rem;
+    }
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .question-num {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .likert-scale {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .likert-btn {
+      flex: 1;
+      min-width: 90px;
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.875rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-main);
+    }
+    .likert-btn .score {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .likert-btn:hover {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.06);
+    }
+    .likert-btn.selected {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.12);
+      color: var(--accent-light);
+    }
+    .likert-btn.selected .score { color: var(--accent-light); }
+
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+    .dim-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .dim-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .dim-dot.active { border-color: var(--accent); color: var(--accent-light); background: rgba(108,99,255,0.1); }
+    .dim-dot.done   { border-color: var(--teal); color: var(--teal); background: rgba(0,212,170,0.1); }
+
+    /* Result screen */
+    .result-screen { display: none; }
+    .score-circle {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      background:
+        linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+        linear-gradient(135deg, var(--accent), var(--teal)) border-box;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      margin: 0 auto 2rem;
+    }
+    .score-circle .num {
+      font-size: 3rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .score-circle .label {
+      font-size: 0.75rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .dim-result-item {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-base);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+    }
+    .dim-result-item .dim-icon { font-size: 1.2rem; width: 32px; text-align: center; }
+    .dim-result-item .dim-info { flex: 1; }
+    .dim-result-item .dim-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+    .dim-result-item .dim-bar  { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 0.4rem; overflow: hidden; }
+    .dim-result-item .dim-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--teal)); transition: width 1s ease; }
+    .dim-result-item .dim-score { font-size: 0.9rem; font-weight: 700; color: var(--accent-light); white-space: nowrap; }
+
+    .recommendation-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+    }
+    .rec-priority {
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      margin-top: 0.1rem;
+    }
+    .rec-priority.high { background: rgba(255,80,80,0.15); color: #ff8080; }
+    .rec-priority.mid  { background: rgba(255,200,50,0.15); color: #ffd060; }
+    .rec-priority.low  { background: rgba(80,220,100,0.15); color: #80e890; }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">✦</div>
+      <span>Above &amp; Beyond AI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="leistungen.html" data-i18n="nav_services">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html" class="active" data-i18n="nav_readiness">KI Readiness</a></li>
+      <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+      <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="login.html" class="nav-cta" data-i18n="nav_login">Login</a>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Main -->
+<main style="padding-top: var(--nav-height); min-height: 100vh;">
+
+  <!-- ── Assessment Screen ── -->
+  <div id="assessmentScreen" class="check-layout" style="padding-top:3rem">
+
+    <div class="check-header">
+      <div class="section-tag" data-i18n="readiness_tag">KI Readiness Check</div>
+      <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:0.75rem" data-i18n="check_title">KI Readiness Assessment</h1>
+      <p style="max-width:500px;margin:0 auto" data-i18n="readiness_sub">Messen Sie Ihre KI-Reife in 6 Dimensionen.</p>
+    </div>
+
+    <!-- Dimension dots -->
+    <div class="dim-nav" id="dimNav"></div>
+
+    <!-- Progress bar -->
+    <div class="check-progress-wrap">
+      <div class="check-step-info">
+        <span id="progressLabel">Dimension 1 von 6</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="check-progress-bar">
+        <div class="check-progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Questions container -->
+    <div id="questionsContainer"></div>
+
+    <!-- Navigation -->
+    <div class="nav-controls">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevDimension()" style="display:none" data-i18n="check_prev">Zurück</button>
+      <span style="font-size:0.8rem;color:var(--text-muted)" id="questionCount"></span>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextDimension()">
+        <span data-i18n="check_next">Weiter</span> →
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Result Screen ── -->
+  <div id="resultScreen" class="check-layout result-screen" style="padding-top:3rem">
+    <div class="check-header">
+      <div class="hero-chip" style="display:inline-flex;margin-bottom:1rem">✅ Assessment abgeschlossen</div>
+      <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:0.5rem" data-i18n="dash_title">Ihr KI Readiness Dashboard</h1>
+    </div>
+
+    <!-- Score circle -->
+    <div class="score-circle">
+      <div class="num" id="overallScore">—</div>
+      <div class="label" data-i18n="dash_overall">Gesamt-Score</div>
+    </div>
+
+    <!-- Radar placeholder (Canvas for Chart.js) -->
+    <div class="card" style="margin-bottom:2rem;text-align:center">
+      <h3 style="margin-bottom:1.5rem;font-size:1rem" data-i18n="dash_radar">Radar-Analyse</h3>
+      <canvas id="radarChart" width="400" height="300" style="max-width:100%"></canvas>
+    </div>
+
+    <!-- Dimension results -->
+    <div class="card" style="margin-bottom:2rem">
+      <h3 style="margin-bottom:1.25rem;font-size:1rem">Detailergebnisse</h3>
+      <div id="dimResults"></div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card" style="margin-bottom:2rem">
+      <h3 style="margin-bottom:1.25rem;font-size:1rem" data-i18n="dash_recommendations">Handlungsempfehlungen</h3>
+      <div id="recommendations"></div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem">
+      <button class="btn btn-primary" onclick="saveResults()">💾 Ergebnisse speichern</button>
+      <button class="btn btn-secondary" onclick="window.print()">📄 PDF exportieren</button>
+      <a href="kontakt.html" class="btn btn-teal">📞 Beratungsgespräch buchen</a>
+      <button class="btn btn-secondary" onclick="restartCheck()" data-i18n="dash_new">Neues Assessment</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+/**
+ * KI Readiness Check Logic
+ * 6 Dimensions × ~7 Questions each = ~42 questions total
+ * Scoring: 1-5 per question → aggregated to 0-100 per dimension
+ */
+
+const DIMENSIONS = [
+  { id: 'strategy',   icon: '📋', label_de: 'Strategie & Vision',          label_en: 'Strategy & Vision',          weight: 0.20 },
+  { id: 'data',       icon: '🗄️', label_de: 'Daten & Qualität',            label_en: 'Data & Quality',              weight: 0.20 },
+  { id: 'process',    icon: '⚙️', label_de: 'Prozesse & Automatisierung',  label_en: 'Processes & Automation',      weight: 0.15 },
+  { id: 'tech',       icon: '💻', label_de: 'Technologie & Infrastruktur', label_en: 'Technology & Infrastructure', weight: 0.20 },
+  { id: 'culture',    icon: '👥', label_de: 'Kultur & Kompetenz',          label_en: 'Culture & Competency',        weight: 0.15 },
+  { id: 'compliance', icon: '⚖️', label_de: 'Compliance & Governance',     label_en: 'Compliance & Governance',     weight: 0.10 }
+];
+
+const QUESTIONS = {
+  strategy: [
+    { id: 's1', de: 'Gibt es eine formelle KI-Strategie in Ihrem Unternehmen?',                   en: 'Does your company have a formal AI strategy?' },
+    { id: 's2', de: 'Ist KI Teil der offiziellen Unternehmensstrategie?',                         en: 'Is AI part of the official company strategy?' },
+    { id: 's3', de: 'Wurden konkrete KI-Use-Cases identifiziert und priorisiert?',                en: 'Have specific AI use cases been identified and prioritised?' },
+    { id: 's4', de: 'Gibt es definierte KPIs zur Messung des KI-Erfolgs?',                        en: 'Are there defined KPIs to measure AI success?' },
+    { id: 's5', de: 'Haben Führungskräfte ein klares Verständnis von KI-Potenzialen?',            en: 'Do executives have a clear understanding of AI potential?' },
+    { id: 's6', de: 'Ist ein dediziertes Budget für KI-Initiativen vorhanden?',                   en: 'Is a dedicated budget for AI initiatives available?' },
+    { id: 's7', de: 'Existiert eine Roadmap für die KI-Implementierung?',                         en: 'Does an AI implementation roadmap exist?' }
+  ],
+  data: [
+    { id: 'd1', de: 'Sind Ihre Unternehmensdaten zentral zugänglich und strukturiert?',           en: 'Are your company data centrally accessible and structured?' },
+    { id: 'd2', de: 'Wie bewerten Sie die allgemeine Datenqualität in Ihrem Unternehmen?',        en: 'How do you rate the overall data quality in your company?' },
+    { id: 'd3', de: 'Gibt es definierte Prozesse für Datenerfassung und -pflege?',                en: 'Are there defined processes for data collection and maintenance?' },
+    { id: 'd4', de: 'Existieren Data-Governance-Richtlinien?',                                    en: 'Do data governance policies exist?' },
+    { id: 'd5', de: 'Werden Daten aus verschiedenen Quellen systematisch integriert?',            en: 'Is data from various sources systematically integrated?' },
+    { id: 'd6', de: 'Haben relevante Teams einfachen Zugang zu benötigten Daten?',               en: 'Do relevant teams have easy access to the data they need?' },
+    { id: 'd7', de: 'Gibt es Prozesse für Datenschutz und Datensicherheit?',                     en: 'Are there processes for data protection and data security?' }
+  ],
+  process: [
+    { id: 'p1', de: 'Sind Ihre Kernprozesse dokumentiert und standardisiert?',                    en: 'Are your core processes documented and standardised?' },
+    { id: 'p2', de: 'In welchem Umfang werden Prozesse bereits automatisiert?',                   en: 'To what extent are processes already automated?' },
+    { id: 'p3', de: 'Gibt es ein systematisches Prozessverbesserungsprogramm?',                   en: 'Is there a systematic process improvement programme?' },
+    { id: 'p4', de: 'Werden Prozessleistungen regelmäßig gemessen und analysiert?',               en: 'Are process performances regularly measured and analysed?' },
+    { id: 'p5', de: 'Sind Prozesse ausreichend digitalisiert, um KI zu integrieren?',             en: 'Are processes sufficiently digitalised to integrate AI?' },
+    { id: 'p6', de: 'Gibt es klare Verantwortlichkeiten für Prozessoptimierung?',                 en: 'Are there clear responsibilities for process optimisation?' }
+  ],
+  tech: [
+    { id: 't1', de: 'Verfügt Ihr Unternehmen über eine moderne Cloud-Infrastruktur?',             en: 'Does your company have a modern cloud infrastructure?' },
+    { id: 't2', de: 'Sind APIs und Schnittstellen zwischen Systemen vorhanden?',                  en: 'Are APIs and interfaces between systems available?' },
+    { id: 't3', de: 'Werden bereits Machine-Learning- oder KI-Tools eingesetzt?',                 en: 'Are machine learning or AI tools already being used?' },
+    { id: 't4', de: 'Wie gut ist Ihre IT-Infrastruktur skalierbar?',                              en: 'How scalable is your IT infrastructure?' },
+    { id: 't5', de: 'Gibt es ein dediziertes Data-Engineering-Team oder -Kompetenz?',             en: 'Is there a dedicated data engineering team or competency?' },
+    { id: 't6', de: 'Werden moderne Entwicklungs- und Deployment-Praktiken genutzt?',             en: 'Are modern development and deployment practices used?' },
+    { id: 't7', de: 'Sind Sicherheitsstandards für Software und Infrastruktur definiert?',       en: 'Are security standards defined for software and infrastructure?' }
+  ],
+  culture: [
+    { id: 'c1', de: 'Sind Mitarbeitende gegenüber dem Einsatz von KI aufgeschlossen?',            en: 'Are employees open to the use of AI?' },
+    { id: 'c2', de: 'Gibt es eine Lernkultur und Förderung von Weiterbildung?',                   en: 'Is there a learning culture and encouragement of further education?' },
+    { id: 'c3', de: 'Werden Daten in Entscheidungsprozessen aktiv genutzt?',                      en: 'Is data actively used in decision-making processes?' },
+    { id: 'c4', de: 'Gibt es KI-Kompetenz oder Data-Science-Know-how im Unternehmen?',           en: 'Is there AI competency or data science expertise in the company?' },
+    { id: 'c5', de: 'Wie stark ist die Bereitschaft zum organisatorischen Wandel?',               en: 'How strong is the willingness for organisational change?' },
+    { id: 'c6', de: 'Werden Mitarbeitende in Transformationsprozesse einbezogen?',               en: 'Are employees involved in transformation processes?' }
+  ],
+  compliance: [
+    { id: 'co1', de: 'Sind die Anforderungen des EU AI Acts bekannt und analysiert?',             en: 'Are the requirements of the EU AI Act known and analysed?' },
+    { id: 'co2', de: 'Gibt es Prozesse zur DSGVO-konformen Datenverarbeitung?',                   en: 'Are there processes for GDPR-compliant data processing?' },
+    { id: 'co3', de: 'Existiert ein Risikomanagement-Framework für KI?',                          en: 'Does a risk management framework for AI exist?' },
+    { id: 'co4', de: 'Werden ethische Aspekte beim KI-Einsatz berücksichtigt?',                   en: 'Are ethical aspects of AI use taken into account?' },
+    { id: 'co5', de: 'Gibt es klare Verantwortlichkeiten für KI-Governance?',                     en: 'Are there clear responsibilities for AI governance?' },
+    { id: 'co6', de: 'Existieren Audit- und Monitoring-Prozesse für KI-Systeme?',                 en: 'Do audit and monitoring processes for AI systems exist?' }
+  ]
+};
+
+const LIKERT = [
+  { score: 1, de: 'Überhaupt nicht',  en: 'Not at all' },
+  { score: 2, de: 'Kaum',            en: 'Barely' },
+  { score: 3, de: 'Teilweise',       en: 'Partially' },
+  { score: 4, de: 'Weitgehend',      en: 'Largely' },
+  { score: 5, de: 'Vollständig',     en: 'Fully' }
+];
+
+// State
+let currentDimIdx = 0;
+let answers = {};  // { questionId: score }
+
+function getDimLabel(dim) {
+  return currentLang === 'en' ? dim.label_en : dim.label_de;
+}
+function getQuestionText(q) {
+  return currentLang === 'en' ? q.en : q.de;
+}
+function getLikertLabel(l) {
+  return currentLang === 'en' ? l.en : l.de;
+}
+
+function buildDimNav() {
+  const nav = document.getElementById('dimNav');
+  nav.innerHTML = DIMENSIONS.map((d, i) => `
+    <div class="dim-dot ${i === 0 ? 'active' : ''}" id="dimDot${i}" title="${getDimLabel(d)}">${d.icon}</div>
+  `).join('');
+}
+
+function renderDimension(idx) {
+  const dim = DIMENSIONS[idx];
+  const questions = QUESTIONS[dim.id];
+  const container = document.getElementById('questionsContainer');
+
+  // Update progress
+  const pct = Math.round((idx / DIMENSIONS.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    (currentLang === 'en' ? 'Dimension' : 'Dimension') + ` ${idx + 1} ${currentLang === 'en' ? 'of' : 'von'} ${DIMENSIONS.length}`;
+  document.getElementById('questionCount').textContent =
+    questions.length + (currentLang === 'en' ? ' questions' : ' Fragen');
+
+  // Update dim dots
+  document.querySelectorAll('.dim-dot').forEach((dot, i) => {
+    dot.className = 'dim-dot';
+    if (i < idx) dot.classList.add('done');
+    else if (i === idx) dot.classList.add('active');
+  });
+
+  // Nav buttons
+  document.getElementById('prevBtn').style.display = idx === 0 ? 'none' : 'inline-flex';
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.innerHTML = idx === DIMENSIONS.length - 1
+    ? `<span data-i18n="check_submit">Auswertung starten</span> 🚀`
+    : `<span data-i18n="check_next">Weiter</span> →`;
+
+  container.innerHTML = `
+    <div class="dimension-badge">${dim.icon} ${getDimLabel(dim)}</div>
+    ${questions.map((q, qi) => `
+      <div class="question-card" id="qcard_${q.id}">
+        <div class="question-num">Frage ${qi + 1} / ${questions.length}</div>
+        <div class="question-text">${getQuestionText(q)}</div>
+        <div class="likert-scale">
+          ${LIKERT.map(l => `
+            <button class="likert-btn ${answers[q.id] === l.score ? 'selected' : ''}"
+              onclick="selectAnswer('${q.id}', ${l.score}, this, '${dim.id}')">
+              <span class="score">${l.score}</span>
+              <span>${getLikertLabel(l)}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function selectAnswer(questionId, score, btnEl, dimId) {
+  answers[questionId] = score;
+  // Update UI
+  const card = document.getElementById('qcard_' + questionId);
+  card.querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  card.style.borderColor = 'rgba(108,99,255,0.3)';
+}
+
+function getDimAnswerCount(idx) {
+  const dim = DIMENSIONS[idx];
+  const qs = QUESTIONS[dim.id];
+  return qs.filter(q => answers[q.id] !== undefined).length;
+}
+
+function nextDimension() {
+  // Validate — at least half answered
+  const dim = DIMENSIONS[currentDimIdx];
+  const answered = getDimAnswerCount(currentDimIdx);
+  const total = QUESTIONS[dim.id].length;
+  if (answered < Math.ceil(total / 2)) {
+    showToast(
+      currentLang === 'en'
+        ? `Please answer at least ${Math.ceil(total/2)} questions.`
+        : `Bitte beantworten Sie mindestens ${Math.ceil(total/2)} Fragen.`,
+      'warning'
+    );
+    return;
+  }
+
+  if (currentDimIdx < DIMENSIONS.length - 1) {
+    currentDimIdx++;
+    renderDimension(currentDimIdx);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showResults();
+  }
+}
+
+function prevDimension() {
+  if (currentDimIdx > 0) {
+    currentDimIdx--;
+    renderDimension(currentDimIdx);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function calcDimScore(dimId) {
+  const qs = QUESTIONS[dimId];
+  const scored = qs.filter(q => answers[q.id] !== undefined);
+  if (!scored.length) return 0;
+  const sum = scored.reduce((a, q) => a + answers[q.id], 0);
+  return Math.round((sum / (scored.length * 5)) * 100);
+}
+
+function generateRecommendations(scores) {
+  const recs = [];
+  if (scores.strategy < 50) recs.push({ priority: 'high', de: 'KI-Strategie entwickeln: Definieren Sie klare KI-Ziele und Verantwortlichkeiten auf Führungsebene.', en: 'Develop AI strategy: Define clear AI objectives and responsibilities at executive level.' });
+  if (scores.data < 60)     recs.push({ priority: 'high', de: 'Datenfundament stärken: Investieren Sie in Datenqualität, -governance und zentrale Datenhaltung.', en: 'Strengthen data foundation: Invest in data quality, governance and centralised data storage.' });
+  if (scores.tech < 50)     recs.push({ priority: 'high', de: 'Infrastruktur modernisieren: Cloud-Migration und API-Strategie als Voraussetzung für KI.', en: 'Modernise infrastructure: Cloud migration and API strategy as prerequisites for AI.' });
+  if (scores.culture < 60)  recs.push({ priority: 'mid',  de: 'KI-Kultur aufbauen: Schulungsprogramme und Change-Management-Initiativen starten.', en: 'Build AI culture: Launch training programmes and change management initiatives.' });
+  if (scores.process < 60)  recs.push({ priority: 'mid',  de: 'Prozesse digitalisieren: Dokumentation und Automatisierung als Vorstufe für KI-Integration.', en: 'Digitalise processes: Documentation and automation as a precursor to AI integration.' });
+  if (scores.compliance < 50) recs.push({ priority: 'mid', de: 'EU AI Act vorbereiten: Risikobewertung und Compliance-Framework etablieren.', en: 'Prepare for EU AI Act: Establish risk assessment and compliance framework.' });
+  if (recs.length === 0)    recs.push({ priority: 'low',  de: 'Starke KI-Readiness! Fokus auf kontinuierliche Verbesserung und Skalierung Ihrer KI-Initiativen.', en: 'Strong AI readiness! Focus on continuous improvement and scaling your AI initiatives.' });
+  return recs;
+}
+
+function showResults() {
+  // Calculate scores
+  const scores = {};
+  DIMENSIONS.forEach(d => { scores[d.id] = calcDimScore(d.id); });
+  const overall = Math.round(
+    DIMENSIONS.reduce((sum, d) => sum + scores[d.id] * d.weight, 0)
+  );
+
+  // Switch screens
+  document.getElementById('assessmentScreen').style.display = 'none';
+  const resultScreen = document.getElementById('resultScreen');
+  resultScreen.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Overall score
+  document.getElementById('overallScore').textContent = overall;
+
+  // Dimension results
+  const dimResultsEl = document.getElementById('dimResults');
+  dimResultsEl.innerHTML = DIMENSIONS.map(d => `
+    <div class="dim-result-item">
+      <div class="dim-icon">${d.icon}</div>
+      <div class="dim-info">
+        <div class="dim-name">${getDimLabel(d)}</div>
+        <div class="dim-bar"><div class="dim-fill" data-width="${scores[d.id]}" style="width:0%"></div></div>
+      </div>
+      <div class="dim-score">${scores[d.id]}%</div>
+    </div>
+  `).join('');
+
+  // Animate bars
+  setTimeout(() => {
+    dimResultsEl.querySelectorAll('.dim-fill[data-width]').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+  }, 300);
+
+  // Recommendations
+  const recs = generateRecommendations(scores);
+  document.getElementById('recommendations').innerHTML = recs.map(r => `
+    <div class="recommendation-item">
+      <span class="rec-priority ${r.priority}">${
+        r.priority === 'high' ? (currentLang === 'en' ? 'High' : 'Hoch') :
+        r.priority === 'mid'  ? (currentLang === 'en' ? 'Medium' : 'Mittel') : 'Low'
+      }</span>
+      <span style="font-size:0.875rem;color:var(--text-secondary)">${currentLang === 'en' ? r.en : r.de}</span>
+    </div>
+  `).join('');
+
+  // Radar Chart
+  setTimeout(() => renderRadar(scores), 400);
+
+  // Store in session
+  sessionStorage.setItem('lastAssessment', JSON.stringify({ scores, overall, lang: currentLang }));
+}
+
+function renderRadar(scores) {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: DIMENSIONS.map(d => getDimLabel(d)),
+      datasets: [{
+        label: currentLang === 'en' ? 'Your Score' : 'Ihr Score',
+        data: DIMENSIONS.map(d => scores[d.id]),
+        backgroundColor: 'rgba(108,99,255,0.15)',
+        borderColor: '#6C63FF',
+        pointBackgroundColor: '#6C63FF',
+        pointBorderColor: '#fff',
+        borderWidth: 2,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { stepSize: 20, color: '#606080', backdropColor: 'transparent', font: { size: 10 } },
+          grid:  { color: 'rgba(255,255,255,0.06)' },
+          angleLines: { color: 'rgba(255,255,255,0.06)' },
+          pointLabels: { color: '#A0A0C0', font: { size: 11 } }
+        }
+      },
+      plugins: {
+        legend: { labels: { color: '#A0A0C0' } }
+      }
+    }
+  });
+}
+
+async function saveResults() {
+  const stored = sessionStorage.getItem('lastAssessment');
+  if (!stored) return;
+  const payload = JSON.parse(stored);
+  try {
+    const user = await SupabaseAuth.getUser();
+    if (user) payload.user_id = user.id;
+    await ReadinessDB.save({ ...payload, answers });
+    showToast(currentLang === 'en' ? 'Results saved!' : 'Ergebnisse gespeichert!', 'success');
+  } catch (e) {
+    showToast(currentLang === 'en' ? 'Please log in to save.' : 'Bitte einloggen zum Speichern.', 'info');
+    setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+  }
+}
+
+function restartCheck() {
+  answers = {};
+  currentDimIdx = 0;
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('assessmentScreen').style.display = 'block';
+  renderDimension(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  buildDimNav();
+  renderDimension(0);
+});
+</script>
+
+</body>
+</html>
