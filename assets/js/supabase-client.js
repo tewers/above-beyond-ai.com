@@ -1,19 +1,13 @@
 /**
  * Above & Beyond AI — Supabase Client
  *
- * SETUP INSTRUCTIONS:
- * 1. Create a free project at https://supabase.com
- * 2. Go to Settings > API and copy your Project URL + anon key
- * 3. Replace the placeholder values below
- * 4. Run the SQL schema in /database/schema.sql in Supabase SQL Editor
- *
- * NOTE: The anon key is safe to expose in frontend code.
+ * NOTE: The anon/publishable key is safe to expose in frontend code.
  *       Row Level Security (RLS) in Supabase protects your data.
  */
 
 // ── Configuration ─────────────────────────────────────────
-const SUPABASE_URL  = 'YOUR_SUPABASE_URL';   // e.g. https://xyzabc.supabase.co
-const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL  = 'https://vyylecrtdmyfhcvxpuij.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_Y2VArypEq9WJ_u_Kfvd-5g_W_X0eYMH';
 
 // ── Initialize client (loaded via CDN in HTML) ─────────────
 let supabase = null;
@@ -102,10 +96,6 @@ const Auth = {
    ───────────────────────────────────────────────────────── */
 
 const ReadinessDB = {
-  /**
-   * Save a completed assessment.
-   * @param {object} payload - { user_id?, answers, scores, overall_score, lang }
-   */
   async save(payload) {
     const { data, error } = await supabase
       .from('readiness_assessments')
@@ -119,7 +109,6 @@ const ReadinessDB = {
     return data;
   },
 
-  /** Load all assessments for current user */
   async getMyAssessments() {
     const user = await Auth.getUser();
     if (!user) return [];
@@ -132,7 +121,6 @@ const ReadinessDB = {
     return data;
   },
 
-  /** Load a single assessment by ID */
   async getById(id) {
     const { data, error } = await supabase
       .from('readiness_assessments')
@@ -143,7 +131,6 @@ const ReadinessDB = {
     return data;
   },
 
-  /** Aggregate stats for admin / benchmarking */
   async getBenchmarkAverages() {
     const { data, error } = await supabase
       .from('readiness_assessments')
@@ -208,9 +195,9 @@ const ProfileDB = {
 
 async function updateNavAuth() {
   const session = await Auth.getSession();
-  const loginBtn   = document.querySelector('.nav-login-btn');
-  const logoutBtn  = document.querySelector('.nav-logout-btn');
-  const dashBtn    = document.querySelector('.nav-dash-btn');
+  const loginBtn  = document.querySelector('.nav-login-btn');
+  const logoutBtn = document.querySelector('.nav-logout-btn');
+  const dashBtn   = document.querySelector('.nav-dash-btn');
 
   if (session) {
     loginBtn?.classList.add('hidden');
@@ -231,8 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for use in other scripts
-window.SupabaseAuth    = Auth;
-window.ReadinessDB     = ReadinessDB;
-window.ContactDB       = ContactDB;
-window.ProfileDB       = ProfileDB;
-window.initSupabase    = initSupabase;
+window.SupabaseAuth = Auth;
+window.ReadinessDB  = ReadinessDB;
+window.ContactDB    = ContactDB;
+window.ProfileDB    = ProfileDB;
+window.initSupabase = initSupabase;
