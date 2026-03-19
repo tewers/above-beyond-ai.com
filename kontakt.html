@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakt — Above &amp; Beyond AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">✦</div><span>Above &amp; Beyond AI</span></a>
+    <ul class="nav-links">
+      <li><a href="leistungen.html" data-i18n="nav_services">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html" data-i18n="nav_readiness">KI Readiness</a></li>
+      <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+      <li><a href="kontakt.html" class="active" data-i18n="nav_contact">Kontakt</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="login.html" class="nav-cta" data-i18n="nav_login">Login</a>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main style="padding-top: var(--nav-height)">
+
+  <section class="page-hero section-alt" style="padding: 5rem 0 4rem">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a><span>›</span><span data-i18n="nav_contact">Kontakt</span></div>
+      <div class="section-tag" data-i18n="nav_contact">Kontakt</div>
+      <h1 class="fade-in-up" data-i18n="contact_title">Kontakt aufnehmen</h1>
+      <p class="fade-in-up delay-1" data-i18n="contact_sub" style="max-width:500px;margin:0 auto">Wir freuen uns auf Ihre Anfrage.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:960px">
+      <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;align-items:start">
+
+        <!-- Info column -->
+        <div class="reveal">
+          <div class="card" style="margin-bottom:1.5rem">
+            <div style="font-size:1.5rem;margin-bottom:1rem">📧</div>
+            <h4 style="margin-bottom:0.25rem">E-Mail</h4>
+            <p style="margin:0"><a href="mailto:hello@above-beyond-ai.com" style="color:var(--accent-light)">hello@above-beyond-ai.com</a></p>
+          </div>
+          <div class="card" style="margin-bottom:1.5rem">
+            <div style="font-size:1.5rem;margin-bottom:1rem">📅</div>
+            <h4 style="margin-bottom:0.25rem">Beratungsgespräch</h4>
+            <p style="font-size:0.875rem">Kostenloses Erstgespräch von 30 Minuten — unverbindlich und ohne Verpflichtung.</p>
+            <a href="ki-readiness-check.html" class="btn btn-teal btn-sm" style="margin-top:0.5rem">Jetzt buchen</a>
+          </div>
+          <div class="card">
+            <div style="font-size:1.5rem;margin-bottom:1rem">⏱️</div>
+            <h4 style="margin-bottom:0.25rem">Reaktionszeit</h4>
+            <p style="font-size:0.875rem;margin:0">Wir antworten in der Regel innerhalb von 24 Stunden an Werktagen.</p>
+          </div>
+        </div>
+
+        <!-- Form column -->
+        <div class="card reveal delay-1">
+          <h3 style="margin-bottom:1.5rem;font-size:1.1rem">Nachricht senden</h3>
+
+          <div id="formSuccess" class="alert alert-success" style="display:none">
+            <span>✅</span>
+            <span data-i18n="contact_success">Vielen Dank! Wir melden uns in Kürze.</span>
+          </div>
+
+          <form id="contactForm" onsubmit="handleContact(event)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div class="form-group">
+                <label class="form-label" data-i18n="contact_name">Name</label>
+                <input type="text" class="form-input" name="name" required data-i18n-placeholder="contact_name" placeholder="Ihr Name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="contact_email">E-Mail</label>
+                <input type="email" class="form-input" name="email" required placeholder="ihre@email.de" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="contact_company">Unternehmen</label>
+              <input type="text" class="form-input" name="company" placeholder="Ihr Unternehmen" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="contact_topic">Thema</label>
+              <select class="form-select" name="topic">
+                <option value="">Bitte wählen...</option>
+                <option value="readiness">KI Readiness Check</option>
+                <option value="strategie">KI Strategie &amp; Roadmap</option>
+                <option value="implementierung">Implementierung &amp; Integration</option>
+                <option value="training">Training &amp; Workshops</option>
+                <option value="compliance">KI Compliance &amp; Governance</option>
+                <option value="sonstiges">Sonstiges</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="contact_message">Nachricht</label>
+              <textarea class="form-textarea" name="message" rows="5" placeholder="Wie können wir Ihnen helfen?"></textarea>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;font-size:0.8rem;color:var(--text-muted)">
+              <input type="checkbox" id="privacy" required style="accent-color:var(--accent)" />
+              <label for="privacy">Ich habe die <a href="datenschutz.html" style="color:var(--accent-light)">Datenschutzerklärung</a> gelesen und stimme zu.</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
+              <span>✉️</span>
+              <span data-i18n="contact_btn">Nachricht senden</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span data-i18n="footer_copyright">© 2026 Above &amp; Beyond AI. Alle Rechte vorbehalten.</span>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+async function handleContact(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('[type="submit"]');
+  const orig = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const data = Object.fromEntries(new FormData(form));
+    if (window.ContactDB) {
+      await ContactDB.submit(data);
+    }
+    form.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'flex';
+  } catch(err) {
+    showToast(t('error_generic'), 'error');
+    btn.disabled = false;
+    btn.innerHTML = orig;
+  }
+}
+</script>
+</body>
+</html>
