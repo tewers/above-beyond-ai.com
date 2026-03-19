@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Above &amp; Beyond AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-bg {
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 15% 50%, rgba(108,99,255,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 60%, rgba(0,212,170,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .auth-grid {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .auth-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-weight: 800; font-size: 1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+    .auth-logo .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+    }
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-base);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 2rem;
+      gap: 4px;
+    }
+    .auth-tab {
+      flex: 1; text-align: center;
+      padding: 0.6rem;
+      border-radius: 7px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+    }
+    .auth-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.5rem 0; color: var(--text-muted); font-size: 0.8rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--border);
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .auth-footer a { color: var(--accent-light); }
+
+    .password-wrap { position: relative; }
+    .password-toggle {
+      position: absolute; right: 0.875rem; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 1rem; padding: 0;
+      transition: var(--transition);
+    }
+    .password-toggle:hover { color: var(--text-primary); }
+
+    .forgot-link {
+      display: block; text-align: right;
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-top: -0.75rem; margin-bottom: 1.5rem;
+    }
+    .forgot-link:hover { color: var(--accent-light); }
+
+    .strength-bar {
+      height: 3px; border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      margin-top: 0.4rem; overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%; border-radius: 2px;
+      transition: width 0.3s ease, background 0.3s ease;
+      width: 0%;
+    }
+    .strength-label {
+      font-size: 0.72rem; color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Reset password panel */
+    .reset-panel { display: none; }
+    .reset-panel.active { display: block; }
+  </style>
+</head>
+<body>
+<div class="auth-bg"></div>
+<div class="auth-grid"></div>
+
+<main class="auth-page">
+  <div class="auth-card fade-in-up">
+
+    <a href="index.html" class="auth-logo">
+      <div class="logo-icon">✦</div>
+      <span>Above &amp; Beyond AI</span>
+    </a>
+
+    <!-- Main auth panel -->
+    <div id="mainPanel">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')" id="tabLogin">
+          <span data-i18n="login_title">Anmelden</span>
+        </button>
+        <button class="auth-tab" onclick="switchTab('register')" id="tabRegister">
+          <span data-i18n="register_title">Registrieren</span>
+        </button>
+      </div>
+
+      <!-- ── Login Form ── -->
+      <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+        <div id="loginAlert"></div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_email">E-Mail-Adresse</label>
+          <input type="email" class="form-input" name="email" required
+            placeholder="ihre@email.de" autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_password">Passwort</label>
+          <div class="password-wrap">
+            <input type="password" class="form-input" name="password" id="loginPassword"
+              required placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="password-toggle" onclick="togglePw('loginPassword', this)">👁</button>
+          </div>
+        </div>
+
+        <a href="#" class="forgot-link" onclick="showReset(event)" data-i18n="login_forgot">Passwort vergessen?</a>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" id="loginBtn">
+          <span data-i18n="login_btn">Anmelden</span>
+        </button>
+
+        <div class="divider">oder</div>
+
+        <div class="auth-footer">
+          <span data-i18n="login_register">Noch kein Konto?</span>
+          <a href="#" onclick="switchTab('register'); return false;"> Registrieren →</a>
+        </div>
+      </form>
+
+      <!-- ── Register Form ── -->
+      <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+        <div id="registerAlert"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label class="form-label" data-i18n="register_name">Name</label>
+            <input type="text" class="form-input" name="fullName" required
+              placeholder="Max Mustermann" autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="register_company">Unternehmen</label>
+            <input type="text" class="form-input" name="company"
+              placeholder="Firma GmbH" autocomplete="organization" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_email">E-Mail</label>
+          <input type="email" class="form-input" name="email" required
+            placeholder="ihre@email.de" autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_password">Passwort</label>
+          <div class="password-wrap">
+            <input type="password" class="form-input" name="password" id="regPassword"
+              required placeholder="Mindestens 8 Zeichen"
+              oninput="checkStrength(this.value)"
+              autocomplete="new-password" />
+            <button type="button" class="password-toggle" onclick="togglePw('regPassword', this)">👁</button>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+          <div class="strength-label" id="strengthLabel"></div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:1.5rem;font-size:0.8rem;color:var(--text-muted)">
+          <input type="checkbox" id="terms" required style="accent-color:var(--accent);margin-top:2px;flex-shrink:0" />
+          <label for="terms">Ich stimme den <a href="datenschutz.html" style="color:var(--accent-light)">Datenschutzbestimmungen</a> zu.</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" id="registerBtn">
+          <span data-i18n="register_btn">Konto erstellen</span>
+        </button>
+
+        <div class="auth-footer" style="margin-top:1.25rem">
+          <span data-i18n="register_login">Bereits registriert?</span>
+          <a href="#" onclick="switchTab('login'); return false;"> Anmelden →</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── Password Reset Panel ── -->
+    <div id="resetPanel" class="reset-panel">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div style="font-size:2rem;margin-bottom:0.75rem">🔑</div>
+        <h3 style="margin-bottom:0.5rem">Passwort zurücksetzen</h3>
+        <p style="font-size:0.875rem">Wir senden Ihnen einen Reset-Link per E-Mail.</p>
+      </div>
+      <div id="resetAlert"></div>
+      <form onsubmit="handleReset(event)">
+        <div class="form-group">
+          <label class="form-label">E-Mail-Adresse</label>
+          <input type="email" class="form-input" name="resetEmail" required placeholder="ihre@email.de" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
+          Reset-Link senden
+        </button>
+      </form>
+      <div class="auth-footer" style="margin-top:1rem">
+        <a href="#" onclick="showMain(); return false;">← Zurück zum Login</a>
+      </div>
+    </div>
+
+    <!-- ── Email confirmation panel ── -->
+    <div id="confirmPanel" style="display:none;text-align:center">
+      <div style="font-size:3rem;margin-bottom:1rem">📧</div>
+      <h3 style="margin-bottom:0.75rem">E-Mail bestätigen</h3>
+      <p style="font-size:0.9rem;margin-bottom:1.5rem">
+        Wir haben Ihnen eine Bestätigungs-E-Mail geschickt. Bitte klicken Sie auf den Link darin, um Ihr Konto zu aktivieren.
+      </p>
+      <a href="index.html" class="btn btn-secondary" style="justify-content:center;width:100%">
+        Zurück zur Startseite
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+// ── Tab switching ─────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+  document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+}
+
+// ── Show/hide panels ──────────────────────────────────────
+function showReset(e) {
+  e.preventDefault();
+  document.getElementById('mainPanel').style.display = 'none';
+  document.getElementById('resetPanel').classList.add('active');
+}
+function showMain() {
+  document.getElementById('mainPanel').style.display = 'block';
+  document.getElementById('resetPanel').classList.remove('active');
+}
+
+// ── Password visibility toggle ────────────────────────────
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  input.type = input.type === 'password' ? 'text' : 'password';
+  btn.textContent = input.type === 'password' ? '👁' : '🙈';
+}
+
+// ── Password strength ─────────────────────────────────────
+function checkStrength(pw) {
+  const fill  = document.getElementById('strengthFill');
+  const label = document.getElementById('strengthLabel');
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  const levels = [
+    { w: '20%', color: '#ff6060', label: 'Sehr schwach' },
+    { w: '40%', color: '#ffa060', label: 'Schwach' },
+    { w: '60%', color: '#ffd060', label: 'Mittel' },
+    { w: '80%', color: '#80e890', label: 'Stark' },
+    { w: '100%', color: '#00D4AA', label: 'Sehr stark' }
+  ];
+  const lvl = levels[Math.min(score - 1, 4)] || levels[0];
+  fill.style.width    = pw.length ? lvl.w : '0%';
+  fill.style.background = lvl.color;
+  label.textContent   = pw.length ? lvl.label : '';
+  label.style.color   = lvl.color;
+}
+
+// ── Alert helper ──────────────────────────────────────────
+function showAlert(containerId, msg, type = 'error') {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const icons = { error: '❌', success: '✅', info: 'ℹ️' };
+  el.innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : type === 'success' ? 'success' : 'info'}" style="margin-bottom:1rem">
+    <span>${icons[type]}</span><span>${msg}</span>
+  </div>`;
+}
+
+function setBtnLoading(btnId, loading, label) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading ? '<span class="spinner"></span>' : label;
+}
+
+// ── Login ─────────────────────────────────────────────────
+async function handleLogin(e) {
+  e.preventDefault();
+  const fd   = new FormData(e.target);
+  const email    = fd.get('email');
+  const password = fd.get('password');
+
+  setBtnLoading('loginBtn', true);
+  document.getElementById('loginAlert').innerHTML = '';
+
+  try {
+    await SupabaseAuth.signIn({ email, password });
+    // Redirect to dashboard or returnTo URL
+    const params = new URLSearchParams(window.location.search);
+    window.location.href = params.get('returnTo') || 'dashboard.html';
+  } catch (err) {
+    const msg = err.message?.includes('Invalid login')
+      ? 'E-Mail oder Passwort falsch.'
+      : err.message || 'Fehler beim Anmelden.';
+    showAlert('loginAlert', msg, 'error');
+    setBtnLoading('loginBtn', false, '<span data-i18n="login_btn">Anmelden</span>');
+  }
+}
+
+// ── Register ──────────────────────────────────────────────
+async function handleRegister(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = {
+    email:    fd.get('email'),
+    password: fd.get('password'),
+    fullName: fd.get('fullName'),
+    company:  fd.get('company')
+  };
+
+  if (data.password.length < 8) {
+    showAlert('registerAlert', 'Passwort muss mindestens 8 Zeichen haben.', 'error');
+    return;
+  }
+
+  setBtnLoading('registerBtn', true);
+  document.getElementById('registerAlert').innerHTML = '';
+
+  try {
+    await SupabaseAuth.signUp(data);
+    // Show email confirmation panel
+    document.getElementById('mainPanel').style.display = 'none';
+    document.getElementById('resetPanel').classList.remove('active');
+    document.getElementById('confirmPanel').style.display = 'block';
+  } catch (err) {
+    const msg = err.message?.includes('already registered')
+      ? 'Diese E-Mail ist bereits registriert.'
+      : err.message || 'Fehler bei der Registrierung.';
+    showAlert('registerAlert', msg, 'error');
+    setBtnLoading('registerBtn', false, '<span data-i18n="register_btn">Konto erstellen</span>');
+  }
+}
+
+// ── Password reset ────────────────────────────────────────
+async function handleReset(e) {
+  e.preventDefault();
+  const email = new FormData(e.target).get('resetEmail');
+  try {
+    await SupabaseAuth.resetPassword(email);
+    showAlert('resetAlert', 'Reset-Link wurde gesendet! Bitte prüfen Sie Ihre E-Mails.', 'success');
+    e.target.querySelector('button').disabled = true;
+  } catch (err) {
+    showAlert('resetAlert', err.message || 'Fehler beim Senden.', 'error');
+  }
+}
+
+// ── Auto-redirect if already logged in ───────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await SupabaseAuth.getSession();
+  if (session) {
+    window.location.href = 'dashboard.html';
+  }
+});
+</script>
+</body>
+</html>
