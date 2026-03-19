@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Above &amp; Beyond AI — KI-Beratung der nächsten Generation. Strategie, Readiness Check, Implementation und Training." />
+  <meta name="keywords" content="KI Beratung, AI Consulting, KI Readiness, KI Strategie, Artificial Intelligence, Deutschland" />
+  <meta property="og:title" content="Above &amp; Beyond AI — KI-Beratung" />
+  <meta property="og:description" content="Ihr Partner für die KI-Transformation. Readiness Check, Strategie, Implementierung und Training." />
+  <meta property="og:type" content="website" />
+  <title>Above &amp; Beyond AI — KI-Beratung der nächsten Generation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Hauptnavigation">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">✦</div>
+      <span>Above &amp; Beyond AI</span>
+    </a>
+
+    <ul class="nav-links" role="list">
+      <li><a href="leistungen.html" data-i18n="nav_services">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html" data-i18n="nav_readiness">KI Readiness</a></li>
+      <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+      <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+      <li><a href="dashboard.html" class="nav-dash-btn hidden" data-i18n="nav_dashboard">Dashboard</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn active" data-lang="de" aria-label="Deutsch">DE</button>
+        <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+      </div>
+      <a href="login.html" class="nav-login-btn nav-cta" data-i18n="nav_cta">Jetzt starten</a>
+      <button class="nav-logout-btn btn btn-sm btn-secondary hidden" onclick="SupabaseAuth.signOut()">Logout</button>
+    </div>
+
+    <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-container">
+    <!-- Left: Copy -->
+    <div class="hero-content">
+      <div class="hero-badge fade-in-up">
+        <span class="dot"></span>
+        <span data-i18n="hero_badge">KI-Beratung der nächsten Generation</span>
+      </div>
+
+      <h1 class="hero-title fade-in-up delay-1">
+        <span class="line" data-i18n="hero_title_1">Ihr Unternehmen.</span>
+        <span class="line" data-i18n="hero_title_2">Bereit für</span>
+        <span class="line gradient-text" data-i18n="hero_title_3">Künstliche Intelligenz.</span>
+      </h1>
+
+      <p class="hero-subtitle fade-in-up delay-2" data-i18n="hero_subtitle">
+        Above &amp; Beyond AI begleitet Sie auf dem Weg zur KI-ready Organisation — von der Strategie bis zur Implementierung.
+      </p>
+
+      <div class="hero-actions fade-in-up delay-3">
+        <a href="ki-readiness-check.html" class="btn btn-primary btn-lg">
+          <span>🎯</span>
+          <span data-i18n="hero_cta_primary">KI Readiness prüfen</span>
+        </a>
+        <a href="leistungen.html" class="btn btn-secondary btn-lg">
+          <span data-i18n="hero_cta_secondary">Leistungen entdecken</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <div class="hero-stats fade-in-up delay-4">
+        <div class="stat-item">
+          <div class="stat-num" data-count="50">0</div>
+          <div class="stat-label" data-i18n="hero_stat_1_label">Projekte</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">98%</div>
+          <div class="stat-label" data-i18n="hero_stat_2_label">Zufriedenheit</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="15">0</div>
+          <div class="stat-label" data-i18n="hero_stat_3_label">Branchen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Visual Card -->
+    <div class="hero-visual animate-float">
+      <div class="hero-card-main">
+        <div class="card-header">
+          <div class="card-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span style="font-size:0.8rem;color:var(--text-muted)" data-i18n="hero_card_title">KI Readiness Score</span>
+        </div>
+
+        <div class="readiness-chart">
+          <div class="chart-label">
+            <span data-i18n="dim_strategy">Strategie &amp; Vision</span>
+            <span class="text-accent">72%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-width="72" style="width:0"></div>
+          </div>
+        </div>
+        <div class="readiness-chart">
+          <div class="chart-label">
+            <span data-i18n="dim_data">Daten &amp; Qualität</span>
+            <span class="text-teal">85%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-width="85" style="width:0"></div>
+          </div>
+        </div>
+        <div class="readiness-chart">
+          <div class="chart-label">
+            <span data-i18n="dim_culture">Kultur &amp; Kompetenz</span>
+            <span class="text-accent">58%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-width="58" style="width:0"></div>
+          </div>
+        </div>
+        <div class="readiness-chart">
+          <div class="chart-label">
+            <span data-i18n="dim_compliance">Compliance</span>
+            <span style="color:#FFD060">63%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-width="63" style="width:0"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.2rem">Gesamt-Score</div>
+            <div style="font-size:2rem;font-weight:800" class="gradient-text">71<span style="font-size:1rem">/100</span></div>
+          </div>
+          <div class="hero-chip">
+            <span>↑</span>
+            <span data-i18n="hero_card_hint">Analyse in unter 15 Min.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SERVICES SECTION
+══════════════════════════════════════════════════════ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="services_tag">Unsere Leistungen</div>
+      <h2 class="section-title" data-i18n="services_title">Alles, was Ihre KI-Reise braucht</h2>
+      <p data-i18n="services_sub">Von der ersten Standortbestimmung bis zur vollständigen Integration — wir begleiten Sie in jeder Phase.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <a href="ki-readiness-check.html" class="service-card reveal">
+        <div class="service-icon purple">🎯</div>
+        <h3 data-i18n="svc1_title">KI Readiness Check</h3>
+        <p data-i18n="svc1_desc">Umfassende Standortbestimmung Ihrer Organisation in 6 Dimensionen.</p>
+        <span class="service-tag" data-i18n="svc1_tag">Assessment</span>
+      </a>
+
+      <a href="leistungen.html#strategie" class="service-card reveal delay-1">
+        <div class="service-icon teal">🗺️</div>
+        <h3 data-i18n="svc2_title">KI Strategie &amp; Roadmap</h3>
+        <p data-i18n="svc2_desc">Individuelle KI-Strategie mit klarer Priorisierung der Use Cases.</p>
+        <span class="service-tag" data-i18n="svc2_tag">Strategie</span>
+      </a>
+
+      <a href="leistungen.html#implementierung" class="service-card reveal delay-2">
+        <div class="service-icon blue">⚙️</div>
+        <h3 data-i18n="svc3_title">Implementierung &amp; Integration</h3>
+        <p data-i18n="svc3_desc">Technische Umsetzung von KI-Lösungen in bestehende Systeme.</p>
+        <span class="service-tag" data-i18n="svc3_tag">Technologie</span>
+      </a>
+
+      <a href="leistungen.html#change" class="service-card reveal">
+        <div class="service-icon orange">🔄</div>
+        <h3 data-i18n="svc4_title">Change Management &amp; KI-Kultur</h3>
+        <p data-i18n="svc4_desc">Menschen und Organisationen auf den KI-Wandel vorbereiten.</p>
+        <span class="service-tag" data-i18n="svc4_tag">Organisation</span>
+      </a>
+
+      <a href="leistungen.html#training" class="service-card reveal delay-1">
+        <div class="service-icon pink">🎓</div>
+        <h3 data-i18n="svc5_title">KI Training &amp; Workshops</h3>
+        <p data-i18n="svc5_desc">Maßgeschneiderte Trainings für Führungskräfte und Teams.</p>
+        <span class="service-tag" data-i18n="svc5_tag">Weiterbildung</span>
+      </a>
+
+      <a href="leistungen.html#daten" class="service-card reveal delay-2">
+        <div class="service-icon green">🗄️</div>
+        <h3 data-i18n="svc6_title">Datenmanagement &amp; Infrastruktur</h3>
+        <p data-i18n="svc6_desc">Datenstrategie und Infrastrukturaufbau als KI-Fundament.</p>
+        <span class="service-tag" data-i18n="svc6_tag">Daten</span>
+      </a>
+
+      <a href="leistungen.html#compliance" class="service-card reveal">
+        <div class="service-icon yellow">⚖️</div>
+        <h3 data-i18n="svc7_title">KI Compliance &amp; Governance</h3>
+        <p data-i18n="svc7_desc">Rechtssichere KI-Implementierung gemäß EU AI Act.</p>
+        <span class="service-tag" data-i18n="svc7_tag">Compliance</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     READINESS CHECK PREVIEW
+══════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="readiness-preview">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="readiness_tag">KI Readiness Check</div>
+      <h2 data-i18n="readiness_title">Wo steht Ihr Unternehmen?</h2>
+      <p data-i18n="readiness_sub">Unser proprietäres Assessment-Modell misst Ihre KI-Readiness in 6 Dimensionen.</p>
+    </div>
+
+    <div class="readiness-preview reveal">
+      <!-- Steps -->
+      <div>
+        <div class="check-step">
+          <div class="step-num">1</div>
+          <div>
+            <h4 data-i18n="readiness_step1_title">Fragebogen ausfüllen</h4>
+            <p data-i18n="readiness_step1_desc">Beantworten Sie ~40 Fragen in 6 Bereichen — ca. 15 Minuten.</p>
+          </div>
+        </div>
+        <div class="check-step">
+          <div class="step-num">2</div>
+          <div>
+            <h4 data-i18n="readiness_step2_title">Analyse &amp; Scoring</h4>
+            <p data-i18n="readiness_step2_desc">Unser Modell berechnet Ihren Score in Echtzeit.</p>
+          </div>
+        </div>
+        <div class="check-step">
+          <div class="step-num">3</div>
+          <div>
+            <h4 data-i18n="readiness_step3_title">Dashboard &amp; Report</h4>
+            <p data-i18n="readiness_step3_desc">Interaktives Dashboard mit Radardiagramm und Handlungsfeldern.</p>
+          </div>
+        </div>
+        <div class="check-step">
+          <div class="step-num">4</div>
+          <div>
+            <h4 data-i18n="readiness_step4_title">Beratungsgespräch</h4>
+            <p data-i18n="readiness_step4_desc">Wir besprechen die Ergebnisse und entwickeln die nächsten Schritte.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dimensions Visual -->
+      <div>
+        <div style="background:var(--bg-base);border-radius:var(--radius-lg);padding:2rem;border:1px solid var(--border)">
+          <div style="text-align:center;margin-bottom:1.5rem">
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">6 Dimensionen</div>
+            <div style="font-size:2.5rem;font-weight:800" class="gradient-text">360°</div>
+            <div style="font-size:0.85rem;color:var(--text-secondary)">Ganzheitliche Analyse</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem"><span>📋</span><span data-i18n="dim_strategy">Strategie</span></span>
+              <span class="badge badge-purple">20%</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem"><span>🗄️</span><span data-i18n="dim_data">Daten</span></span>
+              <span class="badge badge-teal">20%</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem"><span>⚙️</span><span data-i18n="dim_process">Prozesse</span></span>
+              <span class="badge badge-purple">15%</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem"><span>💻</span><span data-i18n="dim_tech">Technologie</span></span>
+              <span class="badge badge-teal">20%</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem"><span>👥</span><span data-i18n="dim_culture">Kultur</span></span>
+              <span class="badge badge-purple">15%</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem"><span>⚖️</span><span data-i18n="dim_compliance">Compliance</span></span>
+              <span class="badge badge-teal">10%</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;text-align:center">
+          <a href="ki-readiness-check.html" class="btn btn-teal btn-lg" style="width:100%;justify-content:center">
+            <span>🚀</span>
+            <span data-i18n="readiness_cta">Jetzt Assessment starten</span>
+          </a>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.75rem;margin-bottom:0" data-i18n="readiness_cta_sub">Kostenlos &amp; unverbindlich</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FEATURES / WHY US
+══════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="features_tag">Warum Above &amp; Beyond</div>
+      <h2 data-i18n="features_title">Was uns unterscheidet</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-item reveal">
+        <div class="feature-number" data-count="6">6</div>
+        <h4 data-i18n="feat1_title">Beratungsdimensionen</h4>
+        <p data-i18n="feat1_desc">Ganzheitliche Analyse von Strategie, Daten, Prozessen, Technologie, Kultur und Compliance.</p>
+      </div>
+      <div class="feature-item reveal delay-1">
+        <div class="feature-number">40+</div>
+        <h4 data-i18n="feat2_title">Assessment-Fragen</h4>
+        <p data-i18n="feat2_desc">Wissenschaftlich fundiertes Fragenmodell für eine präzise Standortbestimmung.</p>
+      </div>
+      <div class="feature-item reveal delay-2">
+        <div class="feature-number">100%</div>
+        <h4 data-i18n="feat3_title">Individuell</h4>
+        <p data-i18n="feat3_desc">Handlungsempfehlungen exakt zugeschnitten auf Ihre Branche, Größe und Reifegrad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     CTA SECTION
+══════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="reveal" style="max-width:600px;margin:0 auto">
+      <h2 style="margin-bottom:1rem" data-i18n="cta_title">Bereit, KI-ready zu werden?</h2>
+      <p style="font-size:1.05rem;margin-bottom:2rem" data-i18n="cta_sub">Starten Sie jetzt mit dem kostenlosen KI Readiness Check.</p>
+      <a href="ki-readiness-check.html" class="btn btn-primary btn-lg">
+        <span>🎯</span>
+        <span data-i18n="cta_btn">Kostenlos starten</span>
+      </a>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:1rem;margin-bottom:0" data-i18n="cta_btn_sub">Kein Konto erforderlich</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom:1rem;display:inline-flex">
+          <div class="logo-icon">✦</div>
+          <span>Above &amp; Beyond AI</span>
+        </a>
+        <p data-i18n="footer_tagline">KI-Beratung, die wirklich weiterhilft.</p>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="footer_col_services">Leistungen</h5>
+        <ul class="footer-links">
+          <li><a href="ki-readiness-check.html" data-i18n="svc1_title">KI Readiness Check</a></li>
+          <li><a href="leistungen.html#strategie" data-i18n="svc2_title">KI Strategie</a></li>
+          <li><a href="leistungen.html#implementierung" data-i18n="svc3_title">Implementierung</a></li>
+          <li><a href="leistungen.html#training" data-i18n="svc5_title">Training</a></li>
+          <li><a href="leistungen.html#compliance" data-i18n="svc7_title">Compliance</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="footer_col_company">Unternehmen</h5>
+        <ul class="footer-links">
+          <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+          <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+          <li><a href="dashboard.html" data-i18n="nav_dashboard">Dashboard</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="footer_col_legal">Rechtliches</h5>
+        <ul class="footer-links">
+          <li><a href="impressum.html" data-i18n="footer_imprint">Impressum</a></li>
+          <li><a href="datenschutz.html" data-i18n="footer_privacy">Datenschutz</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span data-i18n="footer_copyright">© 2026 Above &amp; Beyond AI. Alle Rechte vorbehalten.</span>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
