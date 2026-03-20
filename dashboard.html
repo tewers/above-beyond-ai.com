@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — Above &amp; Beyond AI</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <!-- Supabase SDK ZUERST im HEAD (identisch zu login.html) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <style>
@@ -331,7 +334,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/main.js"></script>
@@ -364,13 +366,29 @@ function showSection(name) {
   if (name === 'history') renderHistory();
 }
 
-/* ── Auth guard ───────────────────────────────────────── */
+/* ── Auth guard (mit Retry-Logik) ─────────────────────── */
 async function authGuard() {
-  const session = await SupabaseAuth.getSession();
+  console.log('[authGuard] Supabase SDK geladen:', !!window.supabase);
+  console.log('[authGuard] getSupabaseClient:', typeof window.getSupabaseClient);
+
+  let session = null;
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    try {
+      session = await SupabaseAuth.getSession();
+      console.log('[authGuard] Versuch', attempt, '— Session:', session ? session.user?.email : 'null');
+      if (session) break;
+    } catch (err) {
+      console.warn('[authGuard] Versuch', attempt, 'Fehler:', err.message);
+    }
+    if (attempt < 5) await new Promise(r => setTimeout(r, 800));
+  }
+
   if (!session) {
+    console.warn('[authGuard] Keine Session nach 5 Versuchen → Redirect zu login.html');
     window.location.href = 'login.html?returnTo=dashboard.html';
     return null;
   }
+  console.log('[authGuard] ✅ Session gültig für:', session.user?.email);
   return session.user;
 }
 
