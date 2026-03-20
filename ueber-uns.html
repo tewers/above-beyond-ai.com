@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Über Above &amp; Beyond AI — Erfahren Sie mehr über unser Team, unsere Mission und unsere Expertise in der KI-Beratung." />
+  <meta name="keywords" content="Über uns, KI Beratung, Above Beyond AI, Markus Pätz, Bielefeld, AI Consulting" />
+  <meta property="og:title" content="Über uns — Above &amp; Beyond AI" />
+  <meta property="og:description" content="Menschen und Unternehmen auf dem Weg in die KI-Zukunft begleiten — das ist unser Antrieb." />
+  <meta property="og:type" content="website" />
+  <title>Über uns — Above &amp; Beyond AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* ── Page-specific styles ── */
+    .about-hero {
+      padding: 10rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .about-hero-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .about-hero-inner .section-tag { margin-bottom: 1.25rem; }
+    .about-hero-inner h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .about-hero-inner p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Story section ── */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .story-grid.reverse { direction: rtl; }
+    .story-grid.reverse > * { direction: ltr; }
+    .story-text h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+      line-height: 1.25;
+    }
+    .story-text p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      font-size: 1.02rem;
+    }
+    .story-text p:last-child { margin-bottom: 0; }
+    .story-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .story-visual::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+    }
+
+    /* Founded badge */
+    .founded-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .founded-badge strong { color: var(--text-primary); }
+    .founded-year {
+      font-size: 4.5rem;
+      font-weight: 800;
+      line-height: 1;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .founded-label {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    .story-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .story-stat-item {
+      background: var(--bg-base);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+    }
+    .story-stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .story-stat-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Team section ── */
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      max-width: 780px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    .team-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--teal) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      flex-shrink: 0;
+      border: 3px solid var(--border);
+    }
+    .team-info h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+    .team-role {
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .team-bio {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .team-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .team-tag {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── Values section ── */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .value-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .value-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .value-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    .value-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .value-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── Expertise section ── */
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .expertise-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      transition: border-color 0.3s;
+    }
+    .expertise-item:hover { border-color: var(--teal); }
+    .expertise-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .expertise-icon.purple { background: rgba(108,99,255,0.15); }
+    .expertise-icon.teal   { background: rgba(0,212,170,0.15); }
+    .expertise-icon.blue   { background: rgba(59,130,246,0.15); }
+    .expertise-icon.orange { background: rgba(249,115,22,0.15); }
+    .expertise-icon.green  { background: rgba(34,197,94,0.15); }
+    .expertise-icon.pink   { background: rgba(236,72,153,0.15); }
+    .expertise-text h4 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .expertise-text p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── Location card ── */
+    .location-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .location-map-placeholder {
+      width: 200px;
+      height: 140px;
+      border-radius: var(--radius);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      font-size: 2.5rem;
+    }
+    .location-info h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .location-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .location-detail:last-child { margin-bottom: 0; }
+    .location-detail a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .location-detail a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .story-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .story-grid.reverse { direction: ltr; }
+      .team-card { grid-template-columns: 1fr; text-align: center; }
+      .team-avatar { margin: 0 auto; }
+      .team-role { justify-content: center; }
+      .team-tags { justify-content: center; }
+      .values-grid { grid-template-columns: 1fr 1fr; }
+      .expertise-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .values-grid { grid-template-columns: 1fr; }
+      .location-card { flex-direction: column; gap: 1.5rem; }
+      .location-map-placeholder { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Hauptnavigation">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">✦</div>
+      <span>Above &amp; Beyond AI</span>
+    </a>
+
+    <ul class="nav-links" role="list">
+      <li><a href="leistungen.html" data-i18n="nav_services">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html" data-i18n="nav_readiness">KI Readiness</a></li>
+      <li><a href="ueber-uns.html" class="active" data-i18n="nav_about">Über uns</a></li>
+      <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+      <li><a href="dashboard.html" class="nav-dash-btn hidden" data-i18n="nav_dashboard">Dashboard</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn active" data-lang="de" aria-label="Deutsch">DE</button>
+        <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+      </div>
+      <a href="login.html" class="nav-login-btn nav-cta" data-i18n="nav_cta">Jetzt starten</a>
+      <button class="nav-logout-btn btn btn-sm btn-secondary hidden" onclick="SupabaseAuth.signOut()">Logout</button>
+    </div>
+
+    <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════ -->
+<section class="about-hero">
+  <div class="container">
+    <div class="about-hero-inner">
+      <div class="section-tag fade-in-up">
+        <span data-i18n="about_tag">Über uns</span>
+      </div>
+      <h1 class="fade-in-up delay-1">
+        <span data-i18n="about_hero_title_1">Menschen und Unternehmen</span><br />
+        <span class="gradient-text" data-i18n="about_hero_title_2">gemeinsam in die KI-Zukunft.</span>
+      </h1>
+      <p class="fade-in-up delay-2" data-i18n="about_hero_sub">
+        Above &amp; Beyond AI ist mehr als eine Beratung. Wir sind Ihr Wegbegleiter in der digitalen Transformation — mit langjähriger Erfahrung, echtem Praxisbezug und dem Anspruch, wirklich über das Gewöhnliche hinauszugehen.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     STORY — COMPANY HISTORY
+══════════════════════════════════════════════════════ -->
+<section class="section" id="geschichte">
+  <div class="container">
+    <div class="story-grid reveal">
+      <div class="story-text">
+        <div class="section-tag" style="margin-bottom:1rem" data-i18n="about_story_tag">Unsere Geschichte</div>
+        <h2 data-i18n="about_story_title">Gegründet aus Überzeugung, nicht aus Opportunismus.</h2>
+        <p data-i18n="about_story_p1">
+          Above &amp; Beyond GmbH wurde 2019 in Bielefeld gegründet — in dem festen Glauben, dass digitale Transformation nur dann gelingt, wenn sie von innen heraus gedacht wird. Menschen, Prozesse und Technologie müssen zusammenwirken.
+        </p>
+        <p data-i18n="about_story_p2">
+          Lange bevor KI zum Mainstream-Thema wurde, haben wir Unternehmen in der digitalen Transformation begleitet: SAP S/4HANA-Migrationen, Prozessoptimierungen, Change Management und Programm-Management. Diese Erfahrung trägt heute unsere KI-Beratung.
+        </p>
+        <p data-i18n="about_story_p3">
+          Heute helfen wir mittelständischen Unternehmen dabei, Künstliche Intelligenz nicht nur zu verstehen — sondern sie strategisch, nachhaltig und menschzentriert einzusetzen.
+        </p>
+      </div>
+
+      <div class="story-visual">
+        <div class="founded-badge">
+          <span>📍</span>
+          <span>Bielefeld, Deutschland — <strong data-i18n="about_founded">Gegründet 2019</strong></span>
+        </div>
+        <div class="founded-year">2019</div>
+        <div class="founded-label" data-i18n="about_founded_label">Gründungsjahr</div>
+        <div class="story-stats">
+          <div class="story-stat-item">
+            <div class="story-stat-num">50+</div>
+            <div class="story-stat-label" data-i18n="about_stat1">Projekte</div>
+          </div>
+          <div class="story-stat-item">
+            <div class="story-stat-num">15+</div>
+            <div class="story-stat-label" data-i18n="about_stat2">Branchen</div>
+          </div>
+          <div class="story-stat-item">
+            <div class="story-stat-num">6+</div>
+            <div class="story-stat-label" data-i18n="about_stat3">Jahre Erfahrung</div>
+          </div>
+          <div class="story-stat-item">
+            <div class="story-stat-num">98%</div>
+            <div class="story-stat-label" data-i18n="about_stat4">Zufriedenheit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     TEAM — MARKUS PÄTZ
+══════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="team">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="about_team_tag">Das Team</div>
+      <h2 data-i18n="about_team_title">Der Mensch hinter Above &amp; Beyond AI</h2>
+    </div>
+
+    <div class="team-card reveal">
+      <div class="team-avatar">👤</div>
+      <div class="team-info">
+        <h3>Markus Pätz</h3>
+        <div class="team-role">
+          <span>✦</span>
+          <span data-i18n="about_role">Geschäftsführer &amp; Gründer</span>
+        </div>
+        <p class="team-bio" data-i18n="about_bio_1">
+          Markus Pätz ist Unternehmer, Berater und Digitalstratege mit langjähriger Erfahrung in der Unternehmenstransformation. Er gründete Above &amp; Beyond GmbH 2019 mit der Vision, den Mittelstand nicht nur in der Digitalisierung zu begleiten — sondern ihn wirklich dazu zu befähigen, das volle Potenzial moderner Technologien zu nutzen.
+        </p>
+        <p class="team-bio" data-i18n="about_bio_2">
+          Mit einem tiefen Verständnis für SAP-Ökosysteme, Prozessoptimierung und Change Management bringt er eine einzigartige Kombination aus technischer Expertise und menschlichem Einfühlungsvermögen mit. Für ihn ist KI kein Selbstzweck — sondern ein Werkzeug, das Menschen in ihrer Arbeit stärkt.
+        </p>
+        <div class="team-tags">
+          <span class="team-tag">KI-Strategie</span>
+          <span class="team-tag">SAP S/4HANA</span>
+          <span class="team-tag">Change Management</span>
+          <span class="team-tag">Prozessoptimierung</span>
+          <span class="team-tag">Digital Transformation</span>
+          <span class="team-tag">Programm-Management</span>
+          <span class="team-tag">Finance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     VALUES / MISSION
+══════════════════════════════════════════════════════ -->
+<section class="section" id="werte">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="about_values_tag">Unsere Werte</div>
+      <h2 data-i18n="about_values_title">Was uns antreibt</h2>
+      <p data-i18n="about_values_sub">Unsere Arbeit basiert auf einem klaren Wertekompass — für nachhaltige Beratung, die wirklich wirkt.</p>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-icon">🎯</div>
+        <h3 data-i18n="val1_title">Praxisnähe</h3>
+        <p data-i18n="val1_desc">Keine abstrakten Konzepte. Wir entwickeln Lösungen, die im echten Unternehmensalltag funktionieren — messbar und umsetzbar.</p>
+      </div>
+      <div class="value-card reveal delay-1">
+        <div class="value-icon">🤝</div>
+        <h3 data-i18n="val2_title">Partnerschaft</h3>
+        <p data-i18n="val2_desc">Wir denken langfristig. Unser Ziel ist nicht der schnelle Abschluss, sondern eine echte Partnerschaft auf Augenhöhe.</p>
+      </div>
+      <div class="value-card reveal delay-2">
+        <div class="value-icon">💡</div>
+        <h3 data-i18n="val3_title">Klarheit</h3>
+        <p data-i18n="val3_desc">Komplexe Themen verständlich machen — das ist unsere Stärke. Kein Buzzword-Bingo, sondern klare Handlungsempfehlungen.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">🔬</div>
+        <h3 data-i18n="val4_title">Fundiert</h3>
+        <p data-i18n="val4_desc">Jede Empfehlung basiert auf Analyse, Erfahrung und Daten. Unsere Methoden sind wissenschaftlich fundiert und praxiserprobt.</p>
+      </div>
+      <div class="value-card reveal delay-1">
+        <div class="value-icon">🌱</div>
+        <h3 data-i18n="val5_title">Nachhaltigkeit</h3>
+        <p data-i18n="val5_desc">KI-Transformation muss nachhaltig sein — wirtschaftlich, organisatorisch und gesellschaftlich verantwortlich.</p>
+      </div>
+      <div class="value-card reveal delay-2">
+        <div class="value-icon">🚀</div>
+        <h3 data-i18n="val6_title">Ambition</h3>
+        <p data-i18n="val6_desc">Above &amp; Beyond — das ist kein Slogan, das ist unser Anspruch. Wir gehen die extra Meile. Immer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     EXPERTISE BACKGROUND
+══════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="expertise">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="about_exp_tag">Unsere Expertise</div>
+      <h2 data-i18n="about_exp_title">Breites Know-how. Tiefer Fokus.</h2>
+      <p data-i18n="about_exp_sub">Wir bringen jahrelange Erfahrung aus unterschiedlichen Disziplinen mit — und bündeln sie für Ihre KI-Transformation.</p>
+    </div>
+
+    <div class="expertise-grid reveal">
+      <div class="expertise-item">
+        <div class="expertise-icon purple">🤖</div>
+        <div class="expertise-text">
+          <h4 data-i18n="exp1_title">Künstliche Intelligenz &amp; KI-Strategie</h4>
+          <p data-i18n="exp1_desc">Von der Readiness-Analyse bis zur konkreten Use-Case-Implementierung — wir begleiten die gesamte KI-Reise.</p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-icon teal">🔄</div>
+        <div class="expertise-text">
+          <h4 data-i18n="exp2_title">SAP S/4HANA &amp; ERP-Transformation</h4>
+          <p data-i18n="exp2_desc">Tiefes technisches Verständnis für SAP-Ökosysteme und deren KI-Integration in der Praxis.</p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-icon blue">📊</div>
+        <div class="expertise-text">
+          <h4 data-i18n="exp3_title">Digitale Transformation</h4>
+          <p data-i18n="exp3_desc">Ganzheitliche Begleitung digitaler Transformationsprojekte — von der Strategie bis zum Go-live.</p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-icon orange">👥</div>
+        <div class="expertise-text">
+          <h4 data-i18n="exp4_title">Change Management</h4>
+          <p data-i18n="exp4_desc">Organisationen und Menschen erfolgreich durch Veränderungsprozesse führen.</p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-icon green">⚙️</div>
+        <div class="expertise-text">
+          <h4 data-i18n="exp5_title">Prozessoptimierung</h4>
+          <p data-i18n="exp5_desc">Analyse, Design und Optimierung von Geschäftsprozessen für maximale Effizienz und KI-Readiness.</p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-icon pink">📋</div>
+        <div class="expertise-text">
+          <h4 data-i18n="exp6_title">Programm- &amp; Projektmanagement</h4>
+          <p data-i18n="exp6_desc">Strukturierte Steuerung komplexer Transformationsprogramme mit bewährten Methoden.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     LOCATION / CONTACT INFO
+══════════════════════════════════════════════════════ -->
+<section class="section" id="standort">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag" data-i18n="about_loc_tag">Standort</div>
+      <h2 data-i18n="about_loc_title">Zuhause in Bielefeld. Tätig in ganz Deutschland.</h2>
+    </div>
+
+    <div class="location-card reveal">
+      <div class="location-map-placeholder">
+        🏢
+        <span style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:0.25rem">Bielefeld</span>
+      </div>
+      <div class="location-info">
+        <h3>Above &amp; Beyond GmbH</h3>
+        <div class="location-detail">
+          <span>📍</span>
+          <span>Marktstr. 16, 33602 Bielefeld</span>
+        </div>
+        <div class="location-detail">
+          <span>📞</span>
+          <a href="tel:+4952191455383">0521 91455383</a>
+        </div>
+        <div class="location-detail">
+          <span>✉️</span>
+          <a href="mailto:info@above-beyond.de">info@above-beyond.de</a>
+        </div>
+        <div class="location-detail" style="margin-top:1rem">
+          <a href="kontakt.html" class="btn btn-primary">
+            <span>💬</span>
+            <span data-i18n="about_contact_btn">Jetzt Kontakt aufnehmen</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     CTA SECTION
+══════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="reveal" style="max-width:600px;margin:0 auto">
+      <h2 style="margin-bottom:1rem" data-i18n="about_cta_title">Gemeinsam mehr erreichen.</h2>
+      <p style="font-size:1.05rem;margin-bottom:2rem" data-i18n="about_cta_sub">Starten Sie jetzt mit dem kostenlosen KI Readiness Check oder nehmen Sie direkt Kontakt auf.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="ki-readiness-check.html" class="btn btn-primary btn-lg">
+          <span>🎯</span>
+          <span data-i18n="about_cta_btn1">KI Readiness prüfen</span>
+        </a>
+        <a href="kontakt.html" class="btn btn-secondary btn-lg">
+          <span data-i18n="about_cta_btn2">Kontakt aufnehmen</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom:1rem;display:inline-flex">
+          <div class="logo-icon">✦</div>
+          <span>Above &amp; Beyond AI</span>
+        </a>
+        <p data-i18n="footer_tagline">KI-Beratung, die wirklich weiterhilft.</p>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="footer_col_services">Leistungen</h5>
+        <ul class="footer-links">
+          <li><a href="ki-readiness-check.html" data-i18n="svc1_title">KI Readiness Check</a></li>
+          <li><a href="leistungen.html#strategie" data-i18n="svc2_title">KI Strategie</a></li>
+          <li><a href="leistungen.html#implementierung" data-i18n="svc3_title">Implementierung</a></li>
+          <li><a href="leistungen.html#training" data-i18n="svc5_title">Training</a></li>
+          <li><a href="leistungen.html#compliance" data-i18n="svc7_title">Compliance</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="footer_col_company">Unternehmen</h5>
+        <ul class="footer-links">
+          <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+          <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+          <li><a href="dashboard.html" data-i18n="nav_dashboard">Dashboard</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="footer_col_legal">Rechtliches</h5>
+        <ul class="footer-links">
+          <li><a href="impressum.html" data-i18n="footer_imprint">Impressum</a></li>
+          <li><a href="datenschutz.html" data-i18n="footer_privacy">Datenschutz</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span data-i18n="footer_copyright">© 2026 Above &amp; Beyond AI. Alle Rechte vorbehalten.</span>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
