@@ -162,11 +162,81 @@ const translations = {
     contact_btn:     'Nachricht senden',
     contact_success: 'Vielen Dank! Wir melden uns in Kürze.',
 
-    // About
+    // About (legacy short keys)
     about_title: 'Über Above & Beyond AI',
     about_sub:   'Wir glauben, dass KI das Potenzial hat, jede Organisation zu transformieren — wenn sie richtig eingesetzt wird.',
     about_mission_title: 'Unsere Mission',
     about_mission_text:  'Unternehmen befähigen, KI nicht nur einzusetzen, sondern wirklich zu beherrschen — mit Strategie, Substanz und menschlichem Verstand.',
+
+    // ── Über uns page ──────────────────────────────────────
+    about_tag:            'Über uns',
+    about_hero_title_1:   'Menschen und Unternehmen',
+    about_hero_title_2:   'gemeinsam in die KI-Zukunft.',
+    about_hero_sub:       'Above & Beyond AI ist mehr als eine Beratung. Wir sind Ihr Wegbegleiter in der digitalen Transformation — mit langjähriger Erfahrung, echtem Praxisbezug und dem Anspruch, wirklich über das Gewöhnliche hinauszugehen.',
+
+    about_story_tag:   'Unsere Geschichte',
+    about_story_title: 'Gegründet aus Überzeugung, nicht aus Opportunismus.',
+    about_story_p1:    'Above & Beyond GmbH wurde 2019 in Bielefeld gegründet — in dem festen Glauben, dass digitale Transformation nur dann gelingt, wenn sie von innen heraus gedacht wird. Menschen, Prozesse und Technologie müssen zusammenwirken.',
+    about_story_p2:    'Lange bevor KI zum Mainstream-Thema wurde, haben wir Unternehmen in der digitalen Transformation begleitet: SAP S/4HANA-Migrationen, Prozessoptimierungen, Change Management und Programm-Management. Diese Erfahrung trägt heute unsere KI-Beratung.',
+    about_story_p3:    'Heute helfen wir mittelständischen Unternehmen dabei, Künstliche Intelligenz nicht nur zu verstehen — sondern sie strategisch, nachhaltig und menschzentriert einzusetzen.',
+
+    about_founded:       'Gegründet 2019',
+    about_founded_label: 'Gründungsjahr',
+    about_stat1: 'Projekte',
+    about_stat2: 'Branchen',
+    about_stat3: 'Jahre Erfahrung',
+    about_stat4: 'Zufriedenheit',
+
+    about_team_tag:    'Das Team',
+    about_team_title:  'Der Mensch hinter Above & Beyond AI',
+    about_founder_name:'Gründer & Geschäftsführer',
+    about_role:        'Geschäftsführer & Gründer',
+    about_bio_1:       'Unser Gründer ist Unternehmer, Berater und Digitalstratege mit langjähriger Erfahrung in der Unternehmenstransformation. Er gründete Above & Beyond GmbH 2019 mit der Vision, den Mittelstand nicht nur in der Digitalisierung zu begleiten — sondern ihn wirklich dazu zu befähigen, das volle Potenzial moderner Technologien zu nutzen.',
+    about_bio_2:       'Mit einem tiefen Verständnis für SAP-Ökosysteme, Prozessoptimierung und Change Management bringt er eine einzigartige Kombination aus technischer Expertise und menschlichem Einfühlungsvermögen mit. Für ihn ist KI kein Selbstzweck — sondern ein Werkzeug, das Menschen in ihrer Arbeit stärkt.',
+
+    about_values_tag:  'Unsere Werte',
+    about_values_title:'Was uns antreibt',
+    about_values_sub:  'Unsere Arbeit basiert auf einem klaren Wertekompass — für nachhaltige Beratung, die wirklich wirkt.',
+
+    val1_title: 'Praxisnähe',
+    val1_desc:  'Keine abstrakten Konzepte. Wir entwickeln Lösungen, die im echten Unternehmensalltag funktionieren — messbar und umsetzbar.',
+    val2_title: 'Partnerschaft',
+    val2_desc:  'Wir denken langfristig. Unser Ziel ist nicht der schnelle Abschluss, sondern eine echte Partnerschaft auf Augenhöhe.',
+    val3_title: 'Klarheit',
+    val3_desc:  'Komplexe Themen verständlich machen — das ist unsere Stärke. Kein Buzzword-Bingo, sondern klare Handlungsempfehlungen.',
+    val4_title: 'Fundiert',
+    val4_desc:  'Jede Empfehlung basiert auf Analyse, Erfahrung und Daten. Unsere Methoden sind wissenschaftlich fundiert und praxiserprobt.',
+    val5_title: 'Nachhaltigkeit',
+    val5_desc:  'KI-Transformation muss nachhaltig sein — wirtschaftlich, organisatorisch und gesellschaftlich verantwortlich.',
+    val6_title: 'Ambition',
+    val6_desc:  'Above & Beyond — das ist kein Slogan, das ist unser Anspruch. Wir gehen die extra Meile. Immer.',
+
+    about_exp_tag:   'Unsere Expertise',
+    about_exp_title: 'Breites Know-how. Tiefer Fokus.',
+    about_exp_sub:   'Wir bringen jahrelange Erfahrung aus unterschiedlichen Disziplinen mit — und bündeln sie für Ihre KI-Transformation.',
+
+    exp1_title: 'Künstliche Intelligenz & KI-Strategie',
+    exp1_desc:  'Von der Readiness-Analyse bis zur konkreten Use-Case-Implementierung — wir begleiten die gesamte KI-Reise.',
+    exp2_title: 'SAP S/4HANA & ERP-Transformation',
+    exp2_desc:  'Tiefes technisches Verständnis für SAP-Ökosysteme und deren KI-Integration in der Praxis.',
+    exp3_title: 'Digitale Transformation',
+    exp3_desc:  'Ganzheitliche Begleitung digitaler Transformationsprojekte — von der Strategie bis zum Go-live.',
+    exp4_title: 'Change Management',
+    exp4_desc:  'Organisationen und Menschen erfolgreich durch Veränderungsprozesse führen.',
+    exp5_title: 'Prozessoptimierung',
+    exp5_desc:  'Analyse, Design und Optimierung von Geschäftsprozessen für maximale Effizienz und KI-Readiness.',
+    exp6_title: 'Programm- & Projektmanagement',
+    exp6_desc:  'Strukturierte Steuerung komplexer Transformationsprogramme mit bewährten Methoden.',
+
+    about_loc_tag:    'Standort',
+    about_loc_title:  'Zuhause in Bielefeld. Tätig in ganz Deutschland.',
+    about_loc_city:   'Bielefeld, Deutschland',
+    about_contact_btn:'Jetzt Kontakt aufnehmen',
+
+    about_cta_title:  'Gemeinsam mehr erreichen.',
+    about_cta_sub:    'Starten Sie jetzt mit dem kostenlosen KI Readiness Check oder nehmen Sie direkt Kontakt auf.',
+    about_cta_btn1:   'KI Readiness prüfen',
+    about_cta_btn2:   'Kontakt aufnehmen',
 
     // Common
     learn_more:     'Mehr erfahren',
@@ -333,11 +403,81 @@ const translations = {
     contact_btn:     'Send message',
     contact_success: 'Thank you! We will be in touch shortly.',
 
-    // About
+    // About (legacy short keys)
     about_title: 'About Above & Beyond AI',
     about_sub:   'We believe AI has the potential to transform every organisation — when applied correctly.',
     about_mission_title: 'Our Mission',
     about_mission_text:  'To empower companies to not just use AI, but truly master it — with strategy, substance and human insight.',
+
+    // ── About Us page ──────────────────────────────────────
+    about_tag:            'About us',
+    about_hero_title_1:   'People and organisations',
+    about_hero_title_2:   'into the AI future. Together.',
+    about_hero_sub:       'Above & Beyond AI is more than a consultancy. We are your guide through digital transformation — with years of experience, real-world focus and the ambition to go truly beyond the ordinary.',
+
+    about_story_tag:   'Our Story',
+    about_story_title: 'Founded out of conviction, not opportunity.',
+    about_story_p1:    'Above & Beyond GmbH was founded in 2019 in Bielefeld — with the firm belief that digital transformation only succeeds when it is driven from within. People, processes and technology must work together.',
+    about_story_p2:    'Long before AI became a mainstream topic, we were guiding companies through digital transformation: SAP S/4HANA migrations, process optimisation, change management and programme management. That experience underpins our AI consulting today.',
+    about_story_p3:    'Today we help mid-sized organisations not just understand artificial intelligence — but deploy it strategically, sustainably and with people at the centre.',
+
+    about_founded:       'Founded in 2019',
+    about_founded_label: 'Year founded',
+    about_stat1: 'Projects',
+    about_stat2: 'Industries',
+    about_stat3: 'Years of experience',
+    about_stat4: 'Satisfaction',
+
+    about_team_tag:    'The Team',
+    about_team_title:  'The person behind Above & Beyond AI',
+    about_founder_name:'Founder & Managing Director',
+    about_role:        'Managing Director & Founder',
+    about_bio_1:       'Our founder is an entrepreneur, consultant and digital strategist with extensive experience in organisational transformation. He founded Above & Beyond GmbH in 2019 with the vision of not just accompanying the mid-market on its digitalisation journey — but truly enabling it to unlock the full potential of modern technology.',
+    about_bio_2:       'With a deep understanding of SAP ecosystems, process optimisation and change management, he brings a unique combination of technical expertise and human insight. For him, AI is not an end in itself — it is a tool that empowers people in their work.',
+
+    about_values_tag:  'Our Values',
+    about_values_title:'What drives us',
+    about_values_sub:  'Our work is grounded in a clear set of values — for sustainable consulting that truly makes a difference.',
+
+    val1_title: 'Practicality',
+    val1_desc:  'No abstract concepts. We develop solutions that work in the real business world — measurable and actionable.',
+    val2_title: 'Partnership',
+    val2_desc:  'We think long-term. Our goal is not a quick win, but a genuine partnership at eye level.',
+    val3_title: 'Clarity',
+    val3_desc:  'Making complex topics understandable — that is our strength. No buzzword bingo, just clear recommendations.',
+    val4_title: 'Rigour',
+    val4_desc:  'Every recommendation is based on analysis, experience and data. Our methods are scientifically grounded and battle-tested.',
+    val5_title: 'Sustainability',
+    val5_desc:  'AI transformation must be sustainable — economically, organisationally and in terms of social responsibility.',
+    val6_title: 'Ambition',
+    val6_desc:  'Above & Beyond — that is not a slogan, it is our standard. We go the extra mile. Always.',
+
+    about_exp_tag:   'Our Expertise',
+    about_exp_title: 'Broad knowledge. Deep focus.',
+    about_exp_sub:   'We bring years of experience from different disciplines — and channel it into your AI transformation.',
+
+    exp1_title: 'Artificial Intelligence & AI Strategy',
+    exp1_desc:  'From readiness analysis to concrete use-case implementation — we accompany the full AI journey.',
+    exp2_title: 'SAP S/4HANA & ERP Transformation',
+    exp2_desc:  'Deep technical understanding of SAP ecosystems and their AI integration in practice.',
+    exp3_title: 'Digital Transformation',
+    exp3_desc:  'End-to-end support for digital transformation projects — from strategy to go-live.',
+    exp4_title: 'Change Management',
+    exp4_desc:  'Successfully guiding organisations and people through change processes.',
+    exp5_title: 'Process Optimisation',
+    exp5_desc:  'Analysis, design and optimisation of business processes for maximum efficiency and AI readiness.',
+    exp6_title: 'Programme & Project Management',
+    exp6_desc:  'Structured management of complex transformation programmes using proven methodologies.',
+
+    about_loc_tag:    'Location',
+    about_loc_title:  'Based in Bielefeld. Active across Germany.',
+    about_loc_city:   'Bielefeld, Germany',
+    about_contact_btn:'Get in touch now',
+
+    about_cta_title:  'Achieve more together.',
+    about_cta_sub:    'Start now with the free AI Readiness Check or get in touch with us directly.',
+    about_cta_btn1:   'Check AI Readiness',
+    about_cta_btn2:   'Get in touch',
 
     // Common
     learn_more:     'Learn more',
@@ -353,7 +493,9 @@ const translations = {
 let currentLang = localStorage.getItem('lang') || 'de';
 
 function t(key) {
-  return translations[currentLang][key] || translations['de'][key] || key;
+  return (translations[currentLang] && translations[currentLang][key])
+      || (translations['de'] && translations['de'][key])
+      || key;
 }
 
 function setLang(lang) {
