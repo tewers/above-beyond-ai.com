@@ -4,7 +4,7 @@
  */
 
 const SUPABASE_URL  = 'https://vyylecrtdmyfhcvxpuij.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_Y2VArypEq9WJ_u_Kfvd-5g_W_X0eYMH';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5eWxlY3J0ZG15ZmhjdnhwdWlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzAwNzgsImV4cCI6MjA4OTUwNjA3OH0.V1DT15ubJYb3Z0fsuK4XckNgbT_21yoZPNMAPOHczDE';
 
 // ── Initialize immediately (SDK must be loaded before this script) ──
 let _sb = null;
