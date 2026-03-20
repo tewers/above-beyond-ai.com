@@ -6,7 +6,30 @@
   <title>Login — Above &amp; Beyond AI</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <!-- Supabase SDK ZUERST im HEAD laden (vor allem anderen JS) -->
+
+  <!--
+    ⚠️  WICHTIG: localStorage-Session leeren BEVOR der Supabase SDK lädt.
+    Grund: Wenn eine abgelaufene Session im localStorage liegt, versucht der SDK
+    beim Init den Token zu refreshen. Dieser Refresh-Request kann hängen und hält
+    dabei eine globale Auth-Lock — die dann auch signInWithPassword() blockiert.
+    Durch das Vorab-Löschen gibt es nichts zu refreshen → kein Lock → Login klappt sofort.
+  -->
+  <script>
+  (function clearStaleSupabaseSession() {
+    try {
+      var toRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && (k.startsWith('sb-') || k.indexOf('supabase') !== -1)) {
+          toRemove.push(k);
+        }
+      }
+      toRemove.forEach(function(k) { localStorage.removeItem(k); });
+    } catch(e) { /* safety: ignore storage errors */ }
+  })();
+  </script>
+
+  <!-- Supabase SDK — lädt NACH dem localStorage-Clear -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="assets/css/style.css" />
   <style>
@@ -200,15 +223,14 @@
   </div>
 </main>
 
-<!-- Supabase wurde bereits im HEAD geladen -->
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
-// ── Timeout helper: rejects after ms milliseconds ──
+// ── Timeout helper ──
 function withTimeout(promise, ms, msg) {
   const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error(msg || `Timeout nach ${ms/1000}s — bitte Seite neu laden.`)), ms)
+    setTimeout(() => reject(new Error(msg || `Timeout nach ${ms/1000}s`)), ms)
   );
   return Promise.race([promise, timeout]);
 }
@@ -242,7 +264,7 @@ function checkStrength(pw) {
   let s = 0;
   if (pw.length >= 8) s++;
   if (pw.length >= 12) s++;
-  if (/[A-Z]/.test(pw)) s++; 
+  if (/[A-Z]/.test(pw)) s++;
   if (/[0-9]/.test(pw)) s++;
   if (/[^A-Za-z0-9]/.test(pw)) s++;
   const lvls = [
@@ -272,7 +294,6 @@ async function handleLogin(e) {
   btn.innerHTML = '<span class="spinner"></span>';
   document.getElementById('loginAlert').innerHTML = '';
   try {
-    // 30 Sekunden Timeout — Supabase braucht manchmal länger beim ersten Start
     await withTimeout(
       SupabaseAuth.signIn({ email: fd.get('email'), password: fd.get('password') }),
       30000,
@@ -339,14 +360,8 @@ async function handleReset(e) {
     showAlert('resetAlert', err.message || 'Fehler beim Senden.', 'error');
   }
 }
-
-// Auto-redirect wenn schon eingeloggt
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const session = await SupabaseAuth.getSession();
-    if (session) window.location.href = 'dashboard.html';
-  } catch(e) { /* ignore */ }
-});
+// Hinweis: kein auto-redirect — Session wurde bewusst geleert,
+// damit signInWithPassword() nicht durch einen hängenden Token-Refresh blockiert wird.
 </script>
 </body>
 </html>
