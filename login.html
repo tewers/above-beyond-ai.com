@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — Above &amp; Beyond AI</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <!-- Supabase SDK ZUERST im HEAD laden (vor allem anderen JS) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -204,6 +205,14 @@
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
+// ── Timeout helper: rejects after ms milliseconds ──
+function withTimeout(promise, ms, msg) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error(msg || `Timeout nach ${ms/1000}s — bitte Seite neu laden.`)), ms)
+  );
+  return Promise.race([promise, timeout]);
+}
+
 function switchTab(tab) {
   document.getElementById('loginForm').classList.toggle('active', tab === 'login');
   document.getElementById('registerForm').classList.toggle('active', tab === 'register');
@@ -263,13 +272,18 @@ async function handleLogin(e) {
   btn.innerHTML = '<span class="spinner"></span>';
   document.getElementById('loginAlert').innerHTML = '';
   try {
-    await SupabaseAuth.signIn({ email: fd.get('email'), password: fd.get('password') });
+    await withTimeout(
+      SupabaseAuth.signIn({ email: fd.get('email'), password: fd.get('password') }),
+      10000,
+      'Server antwortet nicht. Bitte in 1–2 Minuten erneut versuchen.'
+    );
     const params = new URLSearchParams(window.location.search);
     window.location.href = params.get('returnTo') || 'dashboard.html';
   } catch (err) {
-    const msg = err.message?.includes('Invalid login credentials')
-      ? 'E-Mail oder Passwort falsch.'
-      : err.message || 'Fehler beim Anmelden.';
+    let msg = err.message || 'Fehler beim Anmelden.';
+    if (msg.includes('Invalid login credentials')) msg = 'E-Mail oder Passwort falsch.';
+    else if (msg.includes('Email not confirmed')) msg = 'Bitte zuerst die Bestätigungs-E-Mail öffnen.';
+    else if (msg.includes('Server antwortet nicht')) msg = err.message;
     showAlert('loginAlert', msg, 'error');
     btn.disabled = false;
     btn.textContent = 'Anmelden';
@@ -288,17 +302,21 @@ async function handleRegister(e) {
   btn.innerHTML = '<span class="spinner"></span>';
   document.getElementById('registerAlert').innerHTML = '';
   try {
-    await SupabaseAuth.signUp({
-      email: fd.get('email'), password: fd.get('password'),
-      fullName: fd.get('fullName'), company: fd.get('company')
-    });
+    await withTimeout(
+      SupabaseAuth.signUp({
+        email: fd.get('email'), password: fd.get('password'),
+        fullName: fd.get('fullName'), company: fd.get('company')
+      }),
+      10000,
+      'Server antwortet nicht. Bitte in 1–2 Minuten erneut versuchen.'
+    );
     document.getElementById('mainPanel').style.display = 'none';
     document.getElementById('resetPanel').classList.remove('active');
     document.getElementById('confirmPanel').style.display = 'block';
   } catch (err) {
-    const msg = err.message?.includes('already registered')
-      ? 'Diese E-Mail ist bereits registriert.'
-      : err.message || 'Fehler bei der Registrierung.';
+    let msg = err.message || 'Fehler bei der Registrierung.';
+    if (msg.includes('already registered')) msg = 'Diese E-Mail ist bereits registriert.';
+    else if (msg.includes('Server antwortet nicht')) msg = err.message;
     showAlert('registerAlert', msg, 'error');
     btn.disabled = false;
     btn.textContent = 'Konto erstellen';
@@ -309,7 +327,11 @@ async function handleReset(e) {
   e.preventDefault();
   const email = new FormData(e.target).get('resetEmail');
   try {
-    await SupabaseAuth.resetPassword(email);
+    await withTimeout(
+      SupabaseAuth.resetPassword(email),
+      10000,
+      'Server antwortet nicht. Bitte später erneut versuchen.'
+    );
     showAlert('resetAlert', '✉️ Reset-Link gesendet! Bitte E-Mails prüfen.', 'success');
     e.target.querySelector('button').disabled = true;
   } catch (err) {
