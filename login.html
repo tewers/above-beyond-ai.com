@@ -242,7 +242,7 @@ function checkStrength(pw) {
   let s = 0;
   if (pw.length >= 8) s++;
   if (pw.length >= 12) s++;
-  if (/[A-Z]/.test(pw)) s++;
+  if (/[A-Z]/.test(pw)) s++; 
   if (/[0-9]/.test(pw)) s++;
   if (/[^A-Za-z0-9]/.test(pw)) s++;
   const lvls = [
@@ -272,9 +272,10 @@ async function handleLogin(e) {
   btn.innerHTML = '<span class="spinner"></span>';
   document.getElementById('loginAlert').innerHTML = '';
   try {
+    // 30 Sekunden Timeout — Supabase braucht manchmal länger beim ersten Start
     await withTimeout(
       SupabaseAuth.signIn({ email: fd.get('email'), password: fd.get('password') }),
-      10000,
+      30000,
       'Server antwortet nicht. Bitte in 1–2 Minuten erneut versuchen.'
     );
     const params = new URLSearchParams(window.location.search);
@@ -307,7 +308,7 @@ async function handleRegister(e) {
         email: fd.get('email'), password: fd.get('password'),
         fullName: fd.get('fullName'), company: fd.get('company')
       }),
-      10000,
+      30000,
       'Server antwortet nicht. Bitte in 1–2 Minuten erneut versuchen.'
     );
     document.getElementById('mainPanel').style.display = 'none';
@@ -329,7 +330,7 @@ async function handleReset(e) {
   try {
     await withTimeout(
       SupabaseAuth.resetPassword(email),
-      10000,
+      30000,
       'Server antwortet nicht. Bitte später erneut versuchen.'
     );
     showAlert('resetAlert', '✉️ Reset-Link gesendet! Bitte E-Mails prüfen.', 'success');
