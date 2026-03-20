@@ -13,6 +13,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    /* Center the lone 7th service card on desktop */
+    @media (min-width: 768px) {
+      .services-grid .service-card:last-child:nth-child(3n+1) {
+        grid-column: 2;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -150,7 +159,7 @@
 
         <div style="margin-top:1.25rem;display:flex;justify-content:space-between;align-items:center">
           <div>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.2rem">Gesamt-Score</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.2rem" data-i18n="dash_overall">Gesamt-Score</div>
             <div style="font-size:2rem;font-weight:800" class="gradient-text">71<span style="font-size:1rem">/100</span></div>
           </div>
           <div class="hero-chip">
@@ -277,9 +286,9 @@
       <div>
         <div style="background:var(--bg-base);border-radius:var(--radius-lg);padding:2rem;border:1px solid var(--border)">
           <div style="text-align:center;margin-bottom:1.5rem">
-            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">6 Dimensionen</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">6 <span data-i18n="about_exp_tag" style="text-transform:none;font-size:inherit;color:inherit;letter-spacing:inherit">Dimensionen</span></div>
             <div style="font-size:2.5rem;font-weight:800" class="gradient-text">360°</div>
-            <div style="font-size:0.85rem;color:var(--text-secondary)">Ganzheitliche Analyse</div>
+            <div style="font-size:0.85rem;color:var(--text-secondary)" data-i18n="readiness_sub_short">Ganzheitliche Analyse</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:0.75rem">
             <div style="display:flex;align-items:center;justify-content:space-between">
@@ -388,7 +397,9 @@
           <li><a href="ki-readiness-check.html" data-i18n="svc1_title">KI Readiness Check</a></li>
           <li><a href="leistungen.html#strategie" data-i18n="svc2_title">KI Strategie</a></li>
           <li><a href="leistungen.html#implementierung" data-i18n="svc3_title">Implementierung</a></li>
+          <li><a href="leistungen.html#change" data-i18n="svc4_title">Change Management</a></li>
           <li><a href="leistungen.html#training" data-i18n="svc5_title">Training</a></li>
+          <li><a href="leistungen.html#daten" data-i18n="svc6_title">Datenmanagement</a></li>
           <li><a href="leistungen.html#compliance" data-i18n="svc7_title">Compliance</a></li>
         </ul>
       </div>
