@@ -3,6 +3,17 @@
  * Handles: Navigation, Scroll, Animations, Toasts, Modals
  */
 
+/* ── Auto-inject favicon (covers all pages) ─────────────── */
+(function() {
+  if (!document.querySelector('link[rel~="icon"]')) {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = 'favicon.svg';
+    document.head.appendChild(link);
+  }
+})();
+
 /* ── Navbar scroll effect ────────────────────────────────── */
 const navbar = document.querySelector('.navbar');
 if (navbar) {
@@ -61,7 +72,7 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
