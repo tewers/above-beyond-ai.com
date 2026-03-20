@@ -238,6 +238,15 @@ const translations = {
     about_cta_btn1:   'KI Readiness prüfen',
     about_cta_btn2:   'Kontakt aufnehmen',
 
+    // Leistungen page visuals
+    leist_6dim:            '6 Bewertungsdimensionen',
+    leist_approach:        'Unser Vorgehen',
+    leist_tech_stack:      'Technologie-Stack',
+    leist_change_dim:      'Change-Dimensionen',
+    leist_workshop_formats:'Workshop-Formate',
+    leist_data_model:      'Daten-Reifegradmodell',
+    leist_risk_classes:    'EU AI Act — Risikoklassen',
+
     // Common
     learn_more:     'Mehr erfahren',
     back_home:      'Zurück zur Startseite',
@@ -478,6 +487,15 @@ const translations = {
     about_cta_sub:    'Start now with the free AI Readiness Check or get in touch with us directly.',
     about_cta_btn1:   'Check AI Readiness',
     about_cta_btn2:   'Get in touch',
+
+    // Leistungen page visuals
+    leist_6dim:            '6 Assessment Dimensions',
+    leist_approach:        'Our Approach',
+    leist_tech_stack:      'Technology Stack',
+    leist_change_dim:      'Change Dimensions',
+    leist_workshop_formats:'Workshop Formats',
+    leist_data_model:      'Data Maturity Model',
+    leist_risk_classes:    'EU AI Act — Risk Classes',
 
     // Common
     learn_more:     'Learn more',
