@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <style>
     /* ── Readiness-Check specific styles ── */
     .check-layout {
@@ -409,6 +410,9 @@ function getQuestionText(q) {
 function getLikertLabel(l) {
   return currentLang === 'en' ? l.en : l.de;
 }
+function getQuestionLabel() {
+  return currentLang === 'en' ? 'Question' : 'Frage';
+}
 
 function buildDimNav() {
   const nav = document.getElementById('dimNav');
@@ -427,7 +431,7 @@ function renderDimension(idx) {
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressPct').textContent = pct + '%';
   document.getElementById('progressLabel').textContent =
-    (currentLang === 'en' ? 'Dimension' : 'Dimension') + ` ${idx + 1} ${currentLang === 'en' ? 'of' : 'von'} ${DIMENSIONS.length}`;
+    `Dimension ${idx + 1} ${currentLang === 'en' ? 'of' : 'von'} ${DIMENSIONS.length}`;
   document.getElementById('questionCount').textContent =
     questions.length + (currentLang === 'en' ? ' questions' : ' Fragen');
 
@@ -449,7 +453,7 @@ function renderDimension(idx) {
     <div class="dimension-badge">${dim.icon} ${getDimLabel(dim)}</div>
     ${questions.map((q, qi) => `
       <div class="question-card" id="qcard_${q.id}">
-        <div class="question-num">Frage ${qi + 1} / ${questions.length}</div>
+        <div class="question-num">${getQuestionLabel()} ${qi + 1} / ${questions.length}</div>
         <div class="question-text">${getQuestionText(q)}</div>
         <div class="likert-scale">
           ${LIKERT.map(l => `
