@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Above &amp; Beyond AI — Unsere KI-Beratungsleistungen: Readiness Check, Strategie, Implementierung, Training, Change Management, Compliance." />
+  <title>Leistungen — Above &amp; Beyond AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* ── Service Detail Card ── */
+    .service-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      padding: 5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .service-detail:last-child { border-bottom: none; }
+    .service-detail.reverse { direction: rtl; }
+    .service-detail.reverse > * { direction: ltr; }
+
+    .service-detail-icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .service-detail-tag {
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--teal); margin-bottom: 0.75rem;
+      display: block;
+    }
+    .service-detail h2 {
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      margin-bottom: 1rem;
+    }
+    .service-detail p { font-size: 1rem; line-height: 1.8; }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .feature-list li::before {
+      content: '✓';
+      color: var(--teal);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .service-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-visual::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+    }
+
+    /* Process steps */
+    .process-step {
+      display: flex; gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .process-step:last-child { margin-bottom: 0; }
+    .step-circle {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+    .step-body h4 { font-size: 0.875rem; margin-bottom: 0.2rem; }
+    .step-body p  { font-size: 0.8rem; margin: 0; }
+
+    /* Pricing cards */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.04);
+    }
+    .pricing-card.featured::before {
+      content: 'Empfohlen';
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: white;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 0.25rem 0.875rem; border-radius: 50px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .pricing-card h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+    .pricing-card .price { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .pricing-features {
+      list-style: none; text-align: left;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .pricing-features li {
+      font-size: 0.82rem; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .pricing-features li::before { content: '✓'; color: var(--teal); font-weight: 700; }
+
+    /* Anchor nav */
+    .services-anchors {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      padding: 1.5rem 0; border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+    .anchor-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 50px; font-size: 0.82rem; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer;
+      transition: var(--transition); text-decoration: none;
+    }
+    .anchor-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+
+    @media (max-width: 900px) {
+      .service-detail { grid-template-columns: 1fr; gap: 2rem; direction: ltr !important; }
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">✦</div><span>Above &amp; Beyond AI</span></a>
+    <ul class="nav-links">
+      <li><a href="leistungen.html" class="active">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html">KI Readiness</a></li>
+      <li><a href="ueber-uns.html">Über uns</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="dashboard.html" class="nav-dash-btn hidden">Dashboard</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a>
+      <button class="nav-logout-btn btn btn-sm btn-secondary hidden" onclick="SupabaseAuth.signOut()">Logout</button>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main style="padding-top: var(--nav-height)">
+
+  <!-- ── Page Hero ── -->
+  <section style="background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 5rem 0 3.5rem">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a><span>›</span><span>Leistungen</span></div>
+      <div style="max-width: 680px">
+        <div class="section-tag">Unsere Leistungen</div>
+        <h1 class="fade-in-up" style="margin-bottom: 1rem">
+          KI-Beratung.<br>
+          <span class="gradient-text">Von der Strategie bis zur Umsetzung.</span>
+        </h1>
+        <p class="fade-in-up delay-1" style="font-size:1.05rem;max-width:560px">
+          Above &amp; Beyond AI verbindet tiefes technisches Know-how mit strategischer Beratungskompetenz — damit KI in Ihrem Unternehmen wirklich wirkt.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem" class="fade-in-up delay-2">
+          <a href="ki-readiness-check.html" class="btn btn-primary">🎯 Readiness Check starten</a>
+          <a href="kontakt.html" class="btn btn-secondary">Beratungsgespräch buchen →</a>
+        </div>
+      </div>
+
+      <!-- Anchor navigation -->
+      <nav class="services-anchors" style="margin-top:3rem">
+        <a href="#readiness" class="anchor-btn">🎯 KI Readiness Check</a>
+        <a href="#strategie" class="anchor-btn">🗺️ Strategie &amp; Roadmap</a>
+        <a href="#implementierung" class="anchor-btn">⚙️ Implementierung</a>
+        <a href="#change" class="anchor-btn">🔄 Change Management</a>
+        <a href="#training" class="anchor-btn">🎓 Training &amp; Workshops</a>
+        <a href="#daten" class="anchor-btn">🗄️ Datenmanagement</a>
+        <a href="#compliance" class="anchor-btn">⚖️ Compliance</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ── Services ── -->
+  <div class="container">
+
+    <!-- 1. KI Readiness Check -->
+    <div class="service-detail" id="readiness">
+      <div class="reveal">
+        <div class="service-detail-icon service-icon purple">🎯</div>
+        <span class="service-detail-tag">Assessment</span>
+        <h2>KI Readiness Check</h2>
+        <p>Bevor ein Unternehmen KI sinnvoll einsetzen kann, muss es wissen, wo es steht. Unser proprietäres Reifegradmodell analysiert Ihre Organisation in <strong>6 Dimensionen</strong> — von Strategie bis Compliance — und liefert einen präzisen Score sowie priorisierte Handlungsempfehlungen.</p>
+        <ul class="feature-list">
+          <li>~42 Fragen in 6 Dimensionen (Strategie, Daten, Prozesse, Technologie, Kultur, Compliance)</li>
+          <li>Automatisches Scoring und Benchmarking gegen Branchendurchschnitte</li>
+          <li>Interaktives Dashboard mit Radar-Diagramm</li>
+          <li>Priorisierte, handlungsorientierte Empfehlungen</li>
+          <li>Optionale Beratungsnachführung zur Ergebnisinterpretation</li>
+        </ul>
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap">
+          <a href="ki-readiness-check.html" class="btn btn-primary">Jetzt starten — kostenlos</a>
+          <a href="kontakt.html" class="btn btn-secondary">Mehr erfahren</a>
+        </div>
+      </div>
+      <div class="service-visual reveal delay-1">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">6 Bewertungsdimensionen</div>
+        <div style="display:flex;flex-direction:column;gap:0.875rem">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">📋 Strategie &amp; Vision</span><span class="text-accent">20%</span></div>
+            <div class="progress-bar"><div class="progress-fill" data-width="72" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">🗄️ Daten &amp; Qualität</span><span class="text-teal">20%</span></div>
+            <div class="progress-bar"><div class="progress-fill" data-width="85" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">⚙️ Prozesse</span><span class="text-accent">15%</span></div>
+            <div class="progress-bar"><div class="progress-fill" data-width="60" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">💻 Technologie</span><span class="text-teal">20%</span></div>
+            <div class="progress-bar"><div class="progress-fill" data-width="68" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">👥 Kultur &amp; Kompetenz</span><span class="text-accent">15%</span></div>
+            <div class="progress-bar"><div class="progress-fill" data-width="55" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">⚖️ Compliance</span><span class="text-teal">10%</span></div>
+            <div class="progress-bar"><div class="progress-fill" data-width="63" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.75rem;color:var(--text-muted)">Gesamt-Score</span>
+          <span style="font-size:1.8rem;font-weight:800" class="gradient-text">71/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Strategie & Roadmap -->
+    <div class="service-detail reverse" id="strategie">
+      <div class="reveal delay-1">
+        <div class="service-detail-icon service-icon teal">🗺️</div>
+        <span class="service-detail-tag">Strategie</span>
+        <h2>KI Strategie &amp; Roadmap</h2>
+        <p>Eine erfolgreiche KI-Transformation beginnt mit einer klaren Strategie. Wir entwickeln gemeinsam mit Ihnen eine individuelle KI-Roadmap — realistisch, priorisiert und auf Ihre Unternehmensziele ausgerichtet. Dabei nutzen wir unser bewährtes Vorgehen aus über 50 Transformationsprojekten.</p>
+        <ul class="feature-list">
+          <li>Analyse bestehender Prozesse und Identifikation von KI-Use-Cases</li>
+          <li>Priorisierung nach Aufwand, Nutzen und strategischer Relevanz</li>
+          <li>Erstellung einer detaillierten Implementierungs-Roadmap</li>
+          <li>Make-or-Buy-Analyse für KI-Tools und -Plattformen</li>
+          <li>Executive Workshops zur Strategieentwicklung</li>
+        </ul>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Strategie-Gespräch buchen →</a>
+      </div>
+      <div class="service-visual reveal">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Unser Vorgehen</div>
+        <div class="process-step">
+          <div class="step-circle">1</div>
+          <div class="step-body"><h4>Ist-Analyse</h4><p style="color:var(--text-secondary)">Bestehende Prozesse, Daten und Technologien bewerten</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle">2</div>
+          <div class="step-body"><h4>Use-Case-Identifikation</h4><p style="color:var(--text-secondary)">KI-Potenziale entlang der Wertschöpfungskette aufdecken</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle">3</div>
+          <div class="step-body"><h4>Priorisierung</h4><p style="color:var(--text-secondary)">Business Cases und ROI-Schätzungen je Use Case</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle">4</div>
+          <div class="step-body"><h4>Roadmap &amp; Planung</h4><p style="color:var(--text-secondary)">Konkreter Umsetzungsplan mit Meilensteinen und Verantwortlichkeiten</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle">5</div>
+          <div class="step-body"><h4>Executive Alignment</h4><p style="color:var(--text-secondary)">Präsentation und Freigabe auf Führungsebene</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Implementierung -->
+    <div class="service-detail" id="implementierung">
+      <div class="reveal">
+        <div class="service-detail-icon service-icon blue">⚙️</div>
+        <span class="service-detail-tag">Technologie</span>
+        <h2>Implementierung &amp; Integration</h2>
+        <p>Von der Idee zur laufenden KI-Lösung. Wir begleiten die technische Umsetzung Ihrer KI-Projekte — von der Auswahl der richtigen Plattformen und Tools bis zur nahtlosen Integration in Ihre bestehende IT-Landschaft, inklusive SAP-Umgebungen.</p>
+        <ul class="feature-list">
+          <li>Tool- und Plattformauswahl (Microsoft Azure AI, OpenAI, Google Vertex u.a.)</li>
+          <li>API-Design und Systemintegration in bestehende Landschaften</li>
+          <li>SAP S/4HANA Integration und Prozessautomatisierung</li>
+          <li>Pilotprojekte und Proof of Concepts (PoCs)</li>
+          <li>Agiles Projektmanagement und Qualitätssicherung</li>
+          <li>Hypercare und Go-Live-Begleitung</li>
+        </ul>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Implementierungsprojekt besprechen →</a>
+      </div>
+      <div class="service-visual reveal delay-1">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Technologie-Stack</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
+            <div style="font-size:1.3rem;margin-bottom:0.4rem">🤖</div>
+            <div style="font-size:0.72rem;font-weight:600;color:var(--text-secondary)">LLM-Integration</div>
+          </div>
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
+            <div style="font-size:1.3rem;margin-bottom:0.4rem">☁️</div>
+            <div style="font-size:0.72rem;font-weight:600;color:var(--text-secondary)">Cloud AI</div>
+          </div>
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
+            <div style="font-size:1.3rem;margin-bottom:0.4rem">🔗</div>
+            <div style="font-size:0.72rem;font-weight:600;color:var(--text-secondary)">SAP Integration</div>
+          </div>
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
+            <div style="font-size:1.3rem;margin-bottom:0.4rem">⚡</div>
+            <div style="font-size:0.72rem;font-weight:600;color:var(--text-secondary)">Automatisierung</div>
+          </div>
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
+            <div style="font-size:1.3rem;margin-bottom:0.4rem">📊</div>
+            <div style="font-size:0.72rem;font-weight:600;color:var(--text-secondary)">Data Pipelines</div>
+          </div>
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
+            <div style="font-size:1.3rem;margin-bottom:0.4rem">🔒</div>
+            <div style="font-size:0.72rem;font-weight:600;color:var(--text-secondary)">Security & Auth</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Change Management -->
+    <div class="service-detail reverse" id="change">
+      <div class="reveal delay-1">
+        <div class="service-detail-icon service-icon orange">🔄</div>
+        <span class="service-detail-tag">Organisation</span>
+        <h2>Change Management &amp; KI-Kultur</h2>
+        <p>KI verändert nicht nur Prozesse — sie verändert die Art, wie Menschen arbeiten. Wir begleiten den kulturellen Wandel in Ihrer Organisation: von der ersten Akzeptanzanalyse bis zur nachhaltigen Verankerung einer datengetriebenen Arbeitskultur.</p>
+        <ul class="feature-list">
+          <li>Stakeholder-Analyse und Kommunikationsplanung</li>
+          <li>Change-Impact-Analyse entlang betroffener Rollen und Prozesse</li>
+          <li>Führungskräfte-Coaching für den KI-Wandel</li>
+          <li>Aufbau interner KI-Champions und Multiplikatoren</li>
+          <li>Begleitung von Transformationsprogrammen (inkl. SAP S/4HANA)</li>
+          <li>Nachhaltige Verankerung durch KPIs und Governance</li>
+        </ul>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Change-Konzept besprechen →</a>
+      </div>
+      <div class="service-visual reveal">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Change-Dimensionen</div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.875rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
+            <span style="font-size:1.4rem">👑</span>
+            <div><div style="font-size:0.85rem;font-weight:600">Leadership</div><div style="font-size:0.75rem;color:var(--text-muted)">Führungskräfte als KI-Vorbilder</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.875rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
+            <span style="font-size:1.4rem">💬</span>
+            <div><div style="font-size:0.85rem;font-weight:600">Kommunikation</div><div style="font-size:0.75rem;color:var(--text-muted)">Transparente, zielgruppengerechte Botschaften</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.875rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
+            <span style="font-size:1.4rem">🎓</span>
+            <div><div style="font-size:0.85rem;font-weight:600">Befähigung</div><div style="font-size:0.75rem;color:var(--text-muted)">Schulungen und Kompetenzaufbau</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.875rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
+            <span style="font-size:1.4rem">📈</span>
+            <div><div style="font-size:0.85rem;font-weight:600">Messung</div><div style="font-size:0.75rem;color:var(--text-muted)">KPIs für Kulturwandel und Akzeptanz</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Training -->
+    <div class="service-detail" id="training">
+      <div class="reveal">
+        <div class="service-detail-icon service-icon pink">🎓</div>
+        <span class="service-detail-tag">Weiterbildung</span>
+        <h2>KI Training &amp; Workshops</h2>
+        <p>Wissen ist die Basis jeder erfolgreichen KI-Transformation. Unsere Trainings und Workshops sind praxisnah, maßgeschneidert und direkt anwendbar — für Führungskräfte, Fachteams und technische Rollen gleichermaßen.</p>
+        <ul class="feature-list">
+          <li>KI-Grundlagen für Nicht-Techniker und Führungskräfte</li>
+          <li>Prompt Engineering und generative KI im Unternehmenseinsatz</li>
+          <li>Datenanalyse und Machine Learning Basics</li>
+          <li>KI-Tools im operativen Alltag (Copilot, ChatGPT, Gemini u.a.)</li>
+          <li>Individuelle Team-Workshops auf Anfrage</li>
+          <li>Inhouse und Remote-Format verfügbar</li>
+        </ul>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Training anfragen →</a>
+      </div>
+      <div class="service-visual reveal delay-1">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Workshop-Formate</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div style="padding:1rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+              <span style="font-size:0.875rem;font-weight:600">KI Kickoff</span>
+              <span class="badge badge-purple">½ Tag</span>
+            </div>
+            <p style="font-size:0.78rem;margin:0">Überblick KI-Potenziale, erste Use Cases, Q&amp;A</p>
+          </div>
+          <div style="padding:1rem;background:var(--bg-base);border-radius:var(--radius);border-color:rgba(108,99,255,0.3);border:1px solid rgba(108,99,255,0.3)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+              <span style="font-size:0.875rem;font-weight:600">KI Intensiv</span>
+              <span class="badge badge-teal">1–2 Tage</span>
+            </div>
+            <p style="font-size:0.78rem;margin:0">Deep Dive in Technologie, Hands-on Labs, Anwendungsfälle</p>
+          </div>
+          <div style="padding:1rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+              <span style="font-size:0.875rem;font-weight:600">KI Lernpfad</span>
+              <span class="badge badge-purple">4–8 Wochen</span>
+            </div>
+            <p style="font-size:0.78rem;margin:0">Strukturiertes Lernprogramm für ganze Teams oder Abteilungen</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Daten -->
+    <div class="service-detail reverse" id="daten">
+      <div class="reveal delay-1">
+        <div class="service-detail-icon service-icon green">🗄️</div>
+        <span class="service-detail-tag">Daten & Infrastruktur</span>
+        <h2>Datenmanagement &amp; KI-Infrastruktur</h2>
+        <p>Ohne Daten keine KI. Wir helfen Ihnen, das Fundament für erfolgreiche KI-Projekte zu legen: von der Datenstrategie über Data Governance bis zur technischen Infrastruktur — skalierbar, sicher und zukunftsfähig.</p>
+        <ul class="feature-list">
+          <li>Datenstrategie und Data-Governance-Frameworks</li>
+          <li>Datenqualitätsanalyse und -verbesserung</li>
+          <li>Aufbau von Data Lakes, Data Warehouses und modernen Datenarchitekturen</li>
+          <li>Master Data Management (MDM)</li>
+          <li>Cloud-Datenstrategie (Azure, AWS, GCP)</li>
+          <li>DSGVO-konforme Datenhaltung und -verarbeitung</li>
+        </ul>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Datenstrategie besprechen →</a>
+      </div>
+      <div class="service-visual reveal">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Daten-Reifegradmodell</div>
+        <div class="process-step">
+          <div class="step-circle">1</div>
+          <div class="step-body"><h4>Datenisolation</h4><p style="color:var(--text-secondary)">Daten in Silos, kaum Integration</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle">2</div>
+          <div class="step-body"><h4>Datenintegration</h4><p style="color:var(--text-secondary)">Erste Vernetzung, manuelle Prozesse</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle">3</div>
+          <div class="step-body"><h4>Datenzentralisierung</h4><p style="color:var(--text-secondary)">Zentrales Warehouse, Governance etabliert</p></div>
+        </div>
+        <div class="process-step">
+          <div class="step-circle" style="background:linear-gradient(135deg,var(--teal),#00a888)">4</div>
+          <div class="step-body"><h4>KI-ready</h4><p style="color:var(--teal)">Hochwertige, skalierbare Datenbasis für KI</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Compliance -->
+    <div class="service-detail" id="compliance">
+      <div class="reveal">
+        <div class="service-detail-icon service-icon yellow">⚖️</div>
+        <span class="service-detail-tag">Compliance & Governance</span>
+        <h2>KI Compliance &amp; Governance</h2>
+        <p>Der EU AI Act stellt Unternehmen vor neue regulatorische Herausforderungen. Wir helfen Ihnen, KI rechtskonform einzusetzen — mit praxisnahen Compliance-Frameworks, Risikobewertungen und ethischen Leitlinien.</p>
+        <ul class="feature-list">
+          <li>EU AI Act Readiness Assessment und Gap-Analyse</li>
+          <li>KI-Risikobewertung und Klassifizierung (nach EU AI Act Risikoklassen)</li>
+          <li>Aufbau eines KI-Governance-Frameworks</li>
+          <li>DSGVO-konforme KI-Implementierung</li>
+          <li>Ethische KI-Richtlinien und Responsible AI Frameworks</li>
+          <li>Audit- und Monitoring-Prozesse für KI-Systeme</li>
+        </ul>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Compliance-Check anfragen →</a>
+      </div>
+      <div class="service-visual reveal delay-1">
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">EU AI Act — Risikoklassen</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem">
+          <div style="padding:0.875rem 1rem;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:var(--radius);display:flex;align-items:center;gap:0.75rem">
+            <span style="color:#ff8080;font-size:1rem">🔴</span>
+            <div><div style="font-size:0.82rem;font-weight:600;color:#ff9090">Inakzeptables Risiko</div><div style="font-size:0.72rem;color:var(--text-muted)">Verboten (z.B. soziale Bewertungssysteme)</div></div>
+          </div>
+          <div style="padding:0.875rem 1rem;background:rgba(255,160,50,0.08);border:1px solid rgba(255,160,50,0.2);border-radius:var(--radius);display:flex;align-items:center;gap:0.75rem">
+            <span style="font-size:1rem">🟠</span>
+            <div><div style="font-size:0.82rem;font-weight:600;color:#ffa060">Hohes Risiko</div><div style="font-size:0.72rem;color:var(--text-muted)">Strenge Anforderungen (Konformitätsbewertung)</div></div>
+          </div>
+          <div style="padding:0.875rem 1rem;background:rgba(255,200,50,0.08);border:1px solid rgba(255,200,50,0.2);border-radius:var(--radius);display:flex;align-items:center;gap:0.75rem">
+            <span style="font-size:1rem">🟡</span>
+            <div><div style="font-size:0.82rem;font-weight:600;color:#ffd060">Begrenztes Risiko</div><div style="font-size:0.72rem;color:var(--text-muted)">Transparenzpflichten</div></div>
+          </div>
+          <div style="padding:0.875rem 1rem;background:rgba(80,220,100,0.08);border:1px solid rgba(80,220,100,0.2);border-radius:var(--radius);display:flex;align-items:center;gap:0.75rem">
+            <span style="font-size:1rem">🟢</span>
+            <div><div style="font-size:0.82rem;font-weight:600;color:#80e890">Minimales Risiko</div><div style="font-size:0.72rem;color:var(--text-muted)">Freiwilliger Code of Conduct</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="container reveal" style="max-width:620px;margin:0 auto;text-align:center">
+      <div class="section-tag">Nächster Schritt</div>
+      <h2 style="margin-bottom:1rem">Welche Leistung passt zu Ihnen?</h2>
+      <p style="font-size:1.05rem;margin-bottom:2rem">Starten Sie mit dem kostenlosen KI Readiness Check — oder sprechen Sie direkt mit uns über Ihren individuellen Bedarf.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="ki-readiness-check.html" class="btn btn-primary btn-lg">🎯 KI Readiness Check starten</a>
+        <a href="kontakt.html" class="btn btn-secondary btn-lg">Kontakt aufnehmen →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 Above &amp; Beyond AI. Alle Rechte vorbehalten.</span>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
