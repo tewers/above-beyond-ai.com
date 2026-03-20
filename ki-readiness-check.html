@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <!-- Supabase SDK loaded in <head> so window.supabase is ready before any scripts run -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* ── Readiness-Check specific styles ── */
     .check-layout {
@@ -315,7 +317,6 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/main.js"></script>
@@ -626,18 +627,43 @@ function renderRadar(scores) {
   });
 }
 
+// Timeout helper — wraps any promise; rejects after `ms` milliseconds
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), ms)
+    )
+  ]);
+}
+
 async function saveResults() {
   const stored = sessionStorage.getItem('lastAssessment');
   if (!stored) return;
   const payload = JSON.parse(stored);
+
+  // Try to attach user_id — but never block or redirect if auth is unavailable.
+  // This page is public; saving is optional and auth failures must not loop back
+  // to login.html (which would then fail to log in due to the lock issue).
   try {
-    const user = await SupabaseAuth.getUser();
+    let user = null;
+    try {
+      user = await withTimeout(SupabaseAuth.getUser(), 10000);
+    } catch (authErr) {
+      console.warn('[saveResults] getUser() timed out or failed — saving anonymously:', authErr.message);
+    }
     if (user) payload.user_id = user.id;
-    await ReadinessDB.save({ ...payload, answers });
+    await withTimeout(ReadinessDB.save({ ...payload, answers }), 15000);
     showToast(currentLang === 'en' ? 'Results saved!' : 'Ergebnisse gespeichert!', 'success');
   } catch (e) {
-    showToast(currentLang === 'en' ? 'Please log in to save.' : 'Bitte einloggen zum Speichern.', 'info');
-    setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+    console.warn('[saveResults] Save failed:', e.message);
+    // Do NOT redirect to login.html — just inform the user so they can log in at their own pace
+    showToast(
+      currentLang === 'en'
+        ? 'Please log in to save your results.'
+        : 'Bitte einloggen, um Ergebnisse zu speichern.',
+      'info'
+    );
   }
 }
 
