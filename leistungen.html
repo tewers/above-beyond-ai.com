@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Above &amp; Beyond AI — Unsere KI-Beratungsleistungen: Readiness Check, Strategie, Implementierung, Training, Change Management, Compliance." />
   <title>Leistungen — Above &amp; Beyond AI</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -158,18 +159,18 @@
   <div class="nav-container">
     <a href="index.html" class="nav-logo"><div class="logo-icon">✦</div><span>Above &amp; Beyond AI</span></a>
     <ul class="nav-links">
-      <li><a href="leistungen.html" class="active">Leistungen</a></li>
-      <li><a href="ki-readiness-check.html">KI Readiness</a></li>
-      <li><a href="ueber-uns.html">Über uns</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="dashboard.html" class="nav-dash-btn hidden">Dashboard</a></li>
+      <li><a href="leistungen.html" class="active" data-i18n="nav_services">Leistungen</a></li>
+      <li><a href="ki-readiness-check.html" data-i18n="nav_readiness">KI Readiness</a></li>
+      <li><a href="ueber-uns.html" data-i18n="nav_about">Über uns</a></li>
+      <li><a href="kontakt.html" data-i18n="nav_contact">Kontakt</a></li>
+      <li><a href="dashboard.html" class="nav-dash-btn hidden" data-i18n="nav_dashboard">Dashboard</a></li>
     </ul>
     <div class="nav-right">
       <div class="lang-switcher">
         <button class="lang-btn active" data-lang="de">DE</button>
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
-      <a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a>
+      <a href="kontakt.html" class="nav-cta" data-i18n="contact_title">Kontakt aufnehmen</a>
       <button class="nav-logout-btn btn btn-sm btn-secondary hidden" onclick="SupabaseAuth.signOut()">Logout</button>
     </div>
     <button class="hamburger"><span></span><span></span><span></span></button>
@@ -233,7 +234,7 @@
         </div>
       </div>
       <div class="service-visual reveal delay-1">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">6 Bewertungsdimensionen</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_6dim">6 Bewertungsdimensionen</div>
         <div style="display:flex;flex-direction:column;gap:0.875rem">
           <div>
             <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.35rem"><span style="color:var(--text-secondary)">📋 Strategie &amp; Vision</span><span class="text-accent">20%</span></div>
@@ -261,7 +262,7 @@
           </div>
         </div>
         <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:0.75rem;color:var(--text-muted)">Gesamt-Score</span>
+          <span style="font-size:0.75rem;color:var(--text-muted)" data-i18n="dash_overall">Gesamt-Score</span>
           <span style="font-size:1.8rem;font-weight:800" class="gradient-text">71/100</span>
         </div>
       </div>
@@ -284,7 +285,7 @@
         <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Strategie-Gespräch buchen →</a>
       </div>
       <div class="service-visual reveal">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Unser Vorgehen</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_approach">Unser Vorgehen</div>
         <div class="process-step">
           <div class="step-circle">1</div>
           <div class="step-body"><h4>Ist-Analyse</h4><p style="color:var(--text-secondary)">Bestehende Prozesse, Daten und Technologien bewerten</p></div>
@@ -326,7 +327,7 @@
         <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Implementierungsprojekt besprechen →</a>
       </div>
       <div class="service-visual reveal delay-1">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Technologie-Stack</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_tech_stack">Technologie-Stack</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
           <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;text-align:center">
             <div style="font-size:1.3rem;margin-bottom:0.4rem">🤖</div>
@@ -374,7 +375,7 @@
         <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Change-Konzept besprechen →</a>
       </div>
       <div class="service-visual reveal">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Change-Dimensionen</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_change_dim">Change-Dimensionen</div>
         <div style="display:flex;flex-direction:column;gap:1rem">
           <div style="display:flex;align-items:center;gap:1rem;padding:0.875rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
             <span style="font-size:1.4rem">👑</span>
@@ -414,7 +415,7 @@
         <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Training anfragen →</a>
       </div>
       <div class="service-visual reveal delay-1">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Workshop-Formate</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_workshop_formats">Workshop-Formate</div>
         <div style="display:flex;flex-direction:column;gap:0.75rem">
           <div style="padding:1rem;background:var(--bg-base);border-radius:var(--radius);border:1px solid var(--border)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
@@ -459,7 +460,7 @@
         <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Datenstrategie besprechen →</a>
       </div>
       <div class="service-visual reveal">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">Daten-Reifegradmodell</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_data_model">Daten-Reifegradmodell</div>
         <div class="process-step">
           <div class="step-circle">1</div>
           <div class="step-body"><h4>Datenisolation</h4><p style="color:var(--text-secondary)">Daten in Silos, kaum Integration</p></div>
@@ -497,7 +498,7 @@
         <a href="kontakt.html" class="btn btn-primary" style="margin-top:2rem">Compliance-Check anfragen →</a>
       </div>
       <div class="service-visual reveal delay-1">
-        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem">EU AI Act — Risikoklassen</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem" data-i18n="leist_risk_classes">EU AI Act — Risikoklassen</div>
         <div style="display:flex;flex-direction:column;gap:0.6rem">
           <div style="padding:0.875rem 1rem;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.2);border-radius:var(--radius);display:flex;align-items:center;gap:0.75rem">
             <span style="color:#ff8080;font-size:1rem">🔴</span>
