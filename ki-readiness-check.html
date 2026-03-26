@@ -321,12 +321,6 @@
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
-/**
- * KI Readiness Check Logic
- * 6 Dimensions × ~7 Questions each = ~42 questions total
- * Scoring: 1-5 per question → aggregated to 0-100 per dimension
- */
-
 const DIMENSIONS = [
   { id: 'strategy',   icon: '📋', label_de: 'Strategie & Vision',          label_en: 'Strategy & Vision',          weight: 0.20 },
   { id: 'data',       icon: '🗄️', label_de: 'Daten & Qualität',            label_en: 'Data & Quality',              weight: 0.20 },
@@ -398,22 +392,13 @@ const LIKERT = [
   { score: 5, de: 'Vollständig',     en: 'Fully' }
 ];
 
-// State
 let currentDimIdx = 0;
-let answers = {};  // { questionId: score }
+let answers = {};
 
-function getDimLabel(dim) {
-  return currentLang === 'en' ? dim.label_en : dim.label_de;
-}
-function getQuestionText(q) {
-  return currentLang === 'en' ? q.en : q.de;
-}
-function getLikertLabel(l) {
-  return currentLang === 'en' ? l.en : l.de;
-}
-function getQuestionLabel() {
-  return currentLang === 'en' ? 'Question' : 'Frage';
-}
+function getDimLabel(dim) { return currentLang === 'en' ? dim.label_en : dim.label_de; }
+function getQuestionText(q) { return currentLang === 'en' ? q.en : q.de; }
+function getLikertLabel(l) { return currentLang === 'en' ? l.en : l.de; }
+function getQuestionLabel() { return currentLang === 'en' ? 'Question' : 'Frage'; }
 
 function buildDimNav() {
   const nav = document.getElementById('dimNav');
@@ -426,8 +411,6 @@ function renderDimension(idx) {
   const dim = DIMENSIONS[idx];
   const questions = QUESTIONS[dim.id];
   const container = document.getElementById('questionsContainer');
-
-  // Update progress
   const pct = Math.round((idx / DIMENSIONS.length) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressPct').textContent = pct + '%';
@@ -435,21 +418,16 @@ function renderDimension(idx) {
     `Dimension ${idx + 1} ${currentLang === 'en' ? 'of' : 'von'} ${DIMENSIONS.length}`;
   document.getElementById('questionCount').textContent =
     questions.length + (currentLang === 'en' ? ' questions' : ' Fragen');
-
-  // Update dim dots
   document.querySelectorAll('.dim-dot').forEach((dot, i) => {
     dot.className = 'dim-dot';
     if (i < idx) dot.classList.add('done');
     else if (i === idx) dot.classList.add('active');
   });
-
-  // Nav buttons
   document.getElementById('prevBtn').style.display = idx === 0 ? 'none' : 'inline-flex';
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.innerHTML = idx === DIMENSIONS.length - 1
     ? `<span data-i18n="check_submit">Auswertung starten</span> 🚀`
     : `<span data-i18n="check_next">Weiter</span> →`;
-
   container.innerHTML = `
     <div class="dimension-badge">${dim.icon} ${getDimLabel(dim)}</div>
     ${questions.map((q, qi) => `
@@ -472,7 +450,6 @@ function renderDimension(idx) {
 
 function selectAnswer(questionId, score, btnEl, dimId) {
   answers[questionId] = score;
-  // Update UI
   const card = document.getElementById('qcard_' + questionId);
   card.querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
   btnEl.classList.add('selected');
@@ -481,12 +458,10 @@ function selectAnswer(questionId, score, btnEl, dimId) {
 
 function getDimAnswerCount(idx) {
   const dim = DIMENSIONS[idx];
-  const qs = QUESTIONS[dim.id];
-  return qs.filter(q => answers[q.id] !== undefined).length;
+  return QUESTIONS[dim.id].filter(q => answers[q.id] !== undefined).length;
 }
 
 function nextDimension() {
-  // Validate — at least half answered
   const dim = DIMENSIONS[currentDimIdx];
   const answered = getDimAnswerCount(currentDimIdx);
   const total = QUESTIONS[dim.id].length;
@@ -499,7 +474,6 @@ function nextDimension() {
     );
     return;
   }
-
   if (currentDimIdx < DIMENSIONS.length - 1) {
     currentDimIdx++;
     renderDimension(currentDimIdx);
@@ -538,23 +512,13 @@ function generateRecommendations(scores) {
 }
 
 function showResults() {
-  // Calculate scores
   const scores = {};
   DIMENSIONS.forEach(d => { scores[d.id] = calcDimScore(d.id); });
-  const overall = Math.round(
-    DIMENSIONS.reduce((sum, d) => sum + scores[d.id] * d.weight, 0)
-  );
-
-  // Switch screens
+  const overall = Math.round(DIMENSIONS.reduce((sum, d) => sum + scores[d.id] * d.weight, 0));
   document.getElementById('assessmentScreen').style.display = 'none';
-  const resultScreen = document.getElementById('resultScreen');
-  resultScreen.style.display = 'block';
+  document.getElementById('resultScreen').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Overall score
   document.getElementById('overallScore').textContent = overall;
-
-  // Dimension results
   const dimResultsEl = document.getElementById('dimResults');
   dimResultsEl.innerHTML = DIMENSIONS.map(d => `
     <div class="dim-result-item">
@@ -566,15 +530,11 @@ function showResults() {
       <div class="dim-score">${scores[d.id]}%</div>
     </div>
   `).join('');
-
-  // Animate bars
   setTimeout(() => {
     dimResultsEl.querySelectorAll('.dim-fill[data-width]').forEach(bar => {
       bar.style.width = bar.dataset.width + '%';
     });
   }, 300);
-
-  // Recommendations
   const recs = generateRecommendations(scores);
   document.getElementById('recommendations').innerHTML = recs.map(r => `
     <div class="recommendation-item">
@@ -585,11 +545,7 @@ function showResults() {
       <span style="font-size:0.875rem;color:var(--text-secondary)">${currentLang === 'en' ? r.en : r.de}</span>
     </div>
   `).join('');
-
-  // Radar Chart
   setTimeout(() => renderRadar(scores), 400);
-
-  // Store in session
   sessionStorage.setItem('lastAssessment', JSON.stringify({ scores, overall, lang: currentLang }));
 }
 
@@ -606,46 +562,35 @@ function renderRadar(scores) {
         borderColor: '#6C63FF',
         pointBackgroundColor: '#6C63FF',
         pointBorderColor: '#fff',
-        borderWidth: 2,
-        pointRadius: 4
+        borderWidth: 2, pointRadius: 4
       }]
     },
     options: {
-      scales: {
-        r: {
-          min: 0, max: 100,
-          ticks: { stepSize: 20, color: '#606080', backdropColor: 'transparent', font: { size: 10 } },
-          grid:  { color: 'rgba(255,255,255,0.06)' },
-          angleLines: { color: 'rgba(255,255,255,0.06)' },
-          pointLabels: { color: '#A0A0C0', font: { size: 11 } }
-        }
-      },
-      plugins: {
-        legend: { labels: { color: '#A0A0C0' } }
-      }
+      scales: { r: {
+        min: 0, max: 100,
+        ticks: { stepSize: 20, color: '#606080', backdropColor: 'transparent', font: { size: 10 } },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        angleLines: { color: 'rgba(255,255,255,0.06)' },
+        pointLabels: { color: '#A0A0C0', font: { size: 11 } }
+      }},
+      plugins: { legend: { labels: { color: '#A0A0C0' } } }
     }
   });
 }
 
-// Timeout helper — wraps any promise; rejects after `ms` milliseconds
 function withTimeout(promise, ms) {
   return Promise.race([
     promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), ms)
-    )
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
   ]);
 }
 
 async function saveResults() {
   const stored = sessionStorage.getItem('lastAssessment');
   if (!stored) return;
-
-  // Destructure explicitly — we need to rename "overall" → "overall_score" for the DB
   const { scores, overall, lang } = JSON.parse(stored);
 
-  // Fast localStorage pre-check: is there any Supabase session token at all?
-  // This avoids a network round-trip just to show "please log in".
+  // Fast localStorage pre-check
   let hasSession = false;
   try {
     for (let i = 0; i < localStorage.length; i++) {
@@ -656,20 +601,14 @@ async function saveResults() {
         break;
       }
     }
-  } catch (e) { /* localStorage may be unavailable */ }
+  } catch (e) { /* ignore */ }
 
   if (!hasSession) {
-    showToast(
-      currentLang === 'en'
-        ? 'Please log in to save your results.'
-        : 'Bitte einloggen, um Ergebnisse zu speichern.',
-      'info'
-    );
+    showToast('Bitte einloggen, um Ergebnisse zu speichern.', 'info');
     return;
   }
 
   try {
-    // Server-side token validation — confirms the session is still active
     let user = null;
     try {
       user = await withTimeout(SupabaseAuth.getUser(), 10000);
@@ -678,17 +617,10 @@ async function saveResults() {
     }
 
     if (!user) {
-      showToast(
-        currentLang === 'en'
-          ? 'Session expired — please log in again.'
-          : 'Sitzung abgelaufen — bitte erneut einloggen.',
-        'warning'
-      );
+      showToast('Sitzung abgelaufen — bitte erneut einloggen.', 'warning');
       return;
     }
 
-    // Build the DB payload with the correct column name.
-    // NOTE: "overall_score" is the Supabase column; "overall" was the local variable name.
     const payload = {
       scores,
       overall_score: overall,
@@ -697,15 +629,12 @@ async function saveResults() {
     };
 
     await withTimeout(ReadinessDB.save(payload), 15000);
-    showToast(currentLang === 'en' ? 'Results saved!' : 'Ergebnisse gespeichert!', 'success');
+    showToast('Ergebnisse gespeichert! ✓', 'success');
+
   } catch (e) {
-    console.warn('[saveResults] Save failed:', e.message);
-    showToast(
-      currentLang === 'en'
-        ? 'Error saving — please try again.'
-        : 'Fehler beim Speichern — bitte erneut versuchen.',
-      'error'
-    );
+    // Show the raw Supabase error so we can diagnose the exact problem
+    console.error('[saveResults] Save failed:', e);
+    showToast('DB-Fehler: ' + (e.message || JSON.stringify(e)), 'error');
   }
 }
 
@@ -718,7 +647,6 @@ function restartCheck() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
   buildDimNav();
   renderDimension(0);
