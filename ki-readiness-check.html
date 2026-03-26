@@ -640,29 +640,71 @@ function withTimeout(promise, ms) {
 async function saveResults() {
   const stored = sessionStorage.getItem('lastAssessment');
   if (!stored) return;
-  const payload = JSON.parse(stored);
 
-  // Try to attach user_id — but never block or redirect if auth is unavailable.
-  // This page is public; saving is optional and auth failures must not loop back
-  // to login.html (which would then fail to log in due to the lock issue).
+  // Destructure explicitly — we need to rename "overall" → "overall_score" for the DB
+  const { scores, overall, lang } = JSON.parse(stored);
+
+  // Fast localStorage pre-check: is there any Supabase session token at all?
+  // This avoids a network round-trip just to show "please log in".
+  let hasSession = false;
   try {
-    let user = null;
-    try {
-      user = await withTimeout(SupabaseAuth.getUser(), 10000);
-    } catch (authErr) {
-      console.warn('[saveResults] getUser() timed out or failed — saving anonymously:', authErr.message);
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('sb-') && k.includes('auth-token')) {
+        const val = JSON.parse(localStorage.getItem(k) || 'null');
+        hasSession = !!(val && val.access_token);
+        break;
+      }
     }
-    if (user) payload.user_id = user.id;
-    await withTimeout(ReadinessDB.save({ ...payload, answers }), 15000);
-    showToast(currentLang === 'en' ? 'Results saved!' : 'Ergebnisse gespeichert!', 'success');
-  } catch (e) {
-    console.warn('[saveResults] Save failed:', e.message);
-    // Do NOT redirect to login.html — just inform the user so they can log in at their own pace
+  } catch (e) { /* localStorage may be unavailable */ }
+
+  if (!hasSession) {
     showToast(
       currentLang === 'en'
         ? 'Please log in to save your results.'
         : 'Bitte einloggen, um Ergebnisse zu speichern.',
       'info'
+    );
+    return;
+  }
+
+  try {
+    // Server-side token validation — confirms the session is still active
+    let user = null;
+    try {
+      user = await withTimeout(SupabaseAuth.getUser(), 10000);
+    } catch (authErr) {
+      console.warn('[saveResults] getUser() failed:', authErr.message);
+    }
+
+    if (!user) {
+      showToast(
+        currentLang === 'en'
+          ? 'Session expired — please log in again.'
+          : 'Sitzung abgelaufen — bitte erneut einloggen.',
+        'warning'
+      );
+      return;
+    }
+
+    // Build the DB payload with the correct column name.
+    // NOTE: "overall_score" is the Supabase column; "overall" was the local variable name.
+    const payload = {
+      scores,
+      overall_score: overall,
+      lang,
+      user_id: user.id,
+    };
+
+    await withTimeout(ReadinessDB.save(payload), 15000);
+    showToast(currentLang === 'en' ? 'Results saved!' : 'Ergebnisse gespeichert!', 'success');
+  } catch (e) {
+    console.warn('[saveResults] Save failed:', e.message);
+    showToast(
+      currentLang === 'en'
+        ? 'Error saving — please try again.'
+        : 'Fehler beim Speichern — bitte erneut versuchen.',
+      'error'
     );
   }
 }
