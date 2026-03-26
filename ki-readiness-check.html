@@ -585,56 +585,56 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-async function saveResults() {
-  const stored = sessionStorage.getItem('lastAssessment');
-  if (!stored) return;
-  const { scores, overall, lang } = JSON.parse(stored);
-
-  // Fast localStorage pre-check
-  let hasSession = false;
+/**
+ * Extract user ID directly from the JWT access token in localStorage.
+ * The JWT's "sub" claim IS the user's UUID in auth.users — no network call needed.
+ * This is more reliable than getUser() which can fail due to token refresh issues.
+ */
+function getUserIdFromToken() {
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith('sb-') && k.includes('auth-token')) {
         const val = JSON.parse(localStorage.getItem(k) || 'null');
-        hasSession = !!(val && val.access_token);
-        break;
+        if (val && val.access_token) {
+          // Decode the JWT payload (middle segment, base64url encoded)
+          const b64 = val.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+          const payload = JSON.parse(atob(b64));
+          return payload.sub || null;
+        }
       }
     }
   } catch (e) { /* ignore */ }
+  return null;
+}
 
-  if (!hasSession) {
+async function saveResults() {
+  const stored = sessionStorage.getItem('lastAssessment');
+  if (!stored) return;
+  const { scores, overall, lang } = JSON.parse(stored);
+
+  // Extract user_id directly from JWT — no network call, guaranteed to match auth.users
+  const userId = getUserIdFromToken();
+
+  if (!userId) {
     showToast('Bitte einloggen, um Ergebnisse zu speichern.', 'info');
     return;
   }
 
   try {
-    let user = null;
-    try {
-      user = await withTimeout(SupabaseAuth.getUser(), 10000);
-    } catch (authErr) {
-      console.warn('[saveResults] getUser() failed:', authErr.message);
-    }
-
-    if (!user) {
-      showToast('Sitzung abgelaufen — bitte erneut einloggen.', 'warning');
-      return;
-    }
-
     const payload = {
       scores,
       overall_score: overall,
       lang,
-      user_id: user.id,
+      user_id: userId,
     };
 
     await withTimeout(ReadinessDB.save(payload), 15000);
     showToast('Ergebnisse gespeichert! ✓', 'success');
 
   } catch (e) {
-    // Show the raw Supabase error so we can diagnose the exact problem
     console.error('[saveResults] Save failed:', e);
-    showToast('DB-Fehler: ' + (e.message || JSON.stringify(e)), 'error');
+    showToast('Fehler beim Speichern — bitte erneut versuchen.', 'error');
   }
 }
 
