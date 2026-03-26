@@ -152,18 +152,37 @@ const ProfileDB = {
 };
 
 /* ── NAV AUTH UI ─────────────────────────────────────────── */
-async function updateNavAuth() {
+// IMPORTANT: Do NOT call Auth.getSession() here. getSession() acquires the
+// Supabase auth lock and can trigger a token refresh. If that refresh fails
+// (e.g. Supabase cold start), the SDK clears the session from localStorage,
+// silently logging the user out on every public page load.
+//
+// For nav-button toggling we only need to know whether a session token exists
+// in storage — we read localStorage directly without any network call.
+function updateNavAuth() {
   try {
-    const session = await Auth.getSession();
-    document.querySelector('.nav-login-btn')?.classList.toggle('hidden', !!session);
-    document.querySelector('.nav-logout-btn')?.classList.toggle('hidden', !session);
-    document.querySelector('.nav-dash-btn')?.classList.toggle('hidden', !session);
+    let hasSession = false;
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('sb-') && k.includes('auth-token')) {
+          const val = JSON.parse(localStorage.getItem(k) || 'null');
+          hasSession = !!(val && val.access_token);
+          break;
+        }
+      }
+    } catch (e) { /* localStorage may be unavailable */ }
+
+    document.querySelector('.nav-login-btn')?.classList.toggle('hidden', hasSession);
+    document.querySelector('.nav-logout-btn')?.classList.toggle('hidden', !hasSession);
+    document.querySelector('.nav-dash-btn')?.classList.toggle('hidden', !hasSession);
   } catch(e) { /* silent */ }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   updateNavAuth();
   try {
+    // Auth state changes (sign-in / sign-out) still update the nav
     Auth.onAuthStateChange(() => updateNavAuth());
   } catch(e) { /* silent */ }
 });
