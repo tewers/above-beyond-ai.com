@@ -135,18 +135,25 @@ const ProfileDB = {
   async get(userId) {
     const sb = getClient();
     if (!sb) throw new Error('Nicht verbunden.');
+    // maybeSingle() returns null (not an error) when no row exists
     const { data, error } = await sb.from('profiles')
-      .select('*').eq('id', userId).single();
+      .select('*').eq('id', userId).maybeSingle();
     if (error) throw error;
-    return data;
+    return data; // null if no profile yet — caller must handle
   },
 
   async update(userId, updates) {
     const sb = getClient();
     if (!sb) throw new Error('Nicht verbunden.');
+    // upsert: creates the profile row if it doesn't exist yet,
+    // updates it if it does. Handles users who registered before
+    // the auto-trigger was set up.
     const { error } = await sb.from('profiles')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', userId);
+      .upsert({
+        id: userId,
+        ...updates,
+        updated_at: new Date().toISOString()
+      });
     if (error) throw error;
   }
 };
